@@ -80,7 +80,7 @@ namespace ModuleTestV8
                 profilePath.Text = profile;
             }
             //Alex add for test
-            testBtn.Visible = false;
+            testBtn.Visible = true;
         }
 
         private void profileSelect_Click(object sender, EventArgs e)

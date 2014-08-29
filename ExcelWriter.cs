@@ -25,14 +25,37 @@ namespace ModuleTestV8
         const int baseX = 2;
         const int baseY = 3;
 
+        private static readonly string StartTimeF = "B";
+        private static readonly string SlotF = "D";
+        private static readonly string PassF = "E";
 
-        private readonly string StartTimeF = "B";
-        private readonly string SlotF = "D";
-        private readonly string PassF = "E";
-        private readonly string CloOffsetF = "F";
-        private readonly string DurationF = "G";
-        private readonly string ErrorCodeF = "H";
-        private readonly string LogF = "I";
+        private static readonly string GpGoldenSnr = "F";
+        private static readonly string GpDeviceSnr = "G";
+        private static readonly string GlGoldenSnr = "H";
+        private static readonly string GlDeviceSnr = "I";
+        private static readonly string BdGoldenSnr = "J";
+        private static readonly string BdDeviceSnr = "K";
+
+        private static readonly string CloOffsetF = "L";
+        private static readonly string DurationF = "M";
+        private static readonly string ErrorCodeF = "N";
+        private static readonly string LogF = "O";
+
+        public static string GetNextCellColName(string s, int index)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (s[s.Length - 1] + index > 'Z')
+            {
+
+            }
+            else
+            {
+                sb.AppendFormat("{0}{1}", s.Substring(0, s.Length - 1), ((char)(s[s.Length - 1] + index)).ToString());
+            }
+
+            return sb.ToString();
+        }
+
 
         public ExcelWriter()
         {
@@ -440,11 +463,8 @@ namespace ModuleTestV8
                 Color textColor0 = Color.FromArgb(255, 255, 255);
                 Color textColor1 = Color.FromArgb(0, 0, 0);
 
-                Color titleColor0 = Color.FromArgb(166, 166, 166);
-                Color titleColor1 = Color.FromArgb(105, 176, 46);
-                Color titleColor2 = Color.FromArgb(73, 152, 43);
-                Color titleColor3 = Color.FromArgb(52, 139, 97);
-                Color titleColor4 = Color.FromArgb(49, 131, 168);
+                Color titleColor = Color.FromArgb(58, 130, 200);
+
                 Color titleColorA = Color.FromArgb(89, 89, 89);
                 Color titleColorB = Color.FromArgb(49, 74, 72);
                 Color titleColorC = Color.FromArgb(46, 71, 76);
@@ -455,28 +475,64 @@ namespace ModuleTestV8
                 //MargeCells("L29", "O29", titleColorB);
                 //MargeCells("P29", "S29", titleColorC);
                 //TextColorCells("B29", "S29", textColor0);
-                MargeCells("B30", "C30", titleColor0);
-                WriteCell("B30", "Start Time");
+                int titleRow = 30;
+                MargeCells(StartTimeF + titleRow.ToString(),
+                    GetNextCellColName(StartTimeF, 1) + titleRow.ToString(),
+                    titleColor);
+                TextColorCells(StartTimeF + titleRow.ToString(),
+                    GetNextCellColName(StartTimeF, 1) + titleRow.ToString(),
+                    textColor0);
+                WriteCell(StartTimeF + titleRow.ToString(), "Start Time");
 
-                FillCells("D30", "D30", titleColor1);
-                WriteCell("D30", "Slot");
+                FillCells(SlotF + titleRow.ToString(), SlotF + titleRow.ToString(), titleColor);
+                TextColorCells(SlotF + titleRow.ToString(), SlotF + titleRow.ToString(), textColor0);
+                WriteCell(SlotF + titleRow.ToString(), "Slot");
 
-                FillCells("E30", "E30", titleColor2);
-                WriteCell("E30", "Pass");
+                FillCells(PassF + titleRow.ToString(), PassF + titleRow.ToString(), titleColor);
+                TextColorCells(PassF + titleRow.ToString(), PassF + titleRow.ToString(), textColor0);
+                WriteCell(PassF + titleRow.ToString(), "Pass");
 
-                FillCells("F30", "F30", titleColor3);
-                WriteCell("F30", "Clk Offset");
+                FillCells(GpGoldenSnr + titleRow.ToString(), GpGoldenSnr + titleRow.ToString(), titleColor);
+                TextColorCells(GpGoldenSnr + titleRow.ToString(), GpGoldenSnr + titleRow.ToString(), textColor0);
+                WriteCell(GpGoldenSnr + titleRow.ToString(), "GP SNR G");
 
-                FillCells("G30", "G30", titleColor4);
-                WriteCell("G30", "Duration");
+                FillCells(GpDeviceSnr + titleRow.ToString(), GpDeviceSnr + titleRow.ToString(), titleColor);
+                TextColorCells(GpDeviceSnr + titleRow.ToString(), GpDeviceSnr + titleRow.ToString(), textColor0);
+                WriteCell(GpDeviceSnr + titleRow.ToString(), "GP SNR D");
 
-                FillCells("H30", "H30", titleColor1);
-                WriteCell("H30", "Error Code");
+                FillCells(GlGoldenSnr + titleRow.ToString(), GlGoldenSnr + titleRow.ToString(), titleColor);
+                TextColorCells(GpGoldenSnr + titleRow.ToString(), GlGoldenSnr + titleRow.ToString(), textColor0);
+                WriteCell(GlGoldenSnr + titleRow.ToString(), "GL SNR G");
 
-                FillCells("I30", "I30", titleColor2);
-                WriteCell("I30", "Log");
+                FillCells(GlDeviceSnr + titleRow.ToString(), GlDeviceSnr + titleRow.ToString(), titleColor);
+                TextColorCells(GlDeviceSnr + titleRow.ToString(), GlDeviceSnr + titleRow.ToString(), textColor0);
+                WriteCell(GlDeviceSnr + titleRow.ToString(), "GL SNR D");
 
-                AlignCells("B30", "S30", XlHAlign.xlHAlignCenter);
+                FillCells(BdGoldenSnr + titleRow.ToString(), BdGoldenSnr + titleRow.ToString(), titleColor);
+                TextColorCells(BdGoldenSnr + titleRow.ToString(), BdGoldenSnr + titleRow.ToString(), textColor0);
+                WriteCell(BdGoldenSnr + titleRow.ToString(), "BD SNR G");
+
+                FillCells(BdDeviceSnr + titleRow.ToString(), BdDeviceSnr + titleRow.ToString(), titleColor);
+                TextColorCells(BdDeviceSnr + titleRow.ToString(), BdDeviceSnr + titleRow.ToString(), textColor0);
+                WriteCell(BdDeviceSnr + titleRow.ToString(), "BD SNR D");
+
+                FillCells(CloOffsetF + titleRow.ToString(), CloOffsetF + titleRow.ToString(), titleColor);
+                TextColorCells(CloOffsetF + titleRow.ToString(), CloOffsetF + titleRow.ToString(), textColor0);
+                WriteCell(CloOffsetF + titleRow.ToString(), "Clk Offset");
+
+                FillCells(DurationF + titleRow.ToString(), DurationF + titleRow.ToString(), titleColor);
+                TextColorCells(DurationF + titleRow.ToString(), DurationF + titleRow.ToString(), textColor0);
+                WriteCell(DurationF + titleRow.ToString(), "Duration");
+
+                FillCells(ErrorCodeF + titleRow.ToString(), ErrorCodeF + titleRow.ToString(), titleColor);
+                TextColorCells(ErrorCodeF + titleRow.ToString(), ErrorCodeF + titleRow.ToString(), textColor0);
+                WriteCell(ErrorCodeF + titleRow.ToString(), "Error Code");
+
+                FillCells(LogF + titleRow.ToString(), LogF + titleRow.ToString(), titleColor);
+                TextColorCells(LogF + titleRow.ToString(), LogF + titleRow.ToString(), textColor0);
+                WriteCell(LogF + titleRow.ToString(), "Log");
+
+                AlignCells(StartTimeF + titleRow.ToString(), LogF + titleRow.ToString(), XlHAlign.xlHAlignCenter);
 
                 return true;
             }
@@ -735,7 +791,41 @@ namespace ModuleTestV8
                 if (ParsingClockOffset(o.InnerText, ref value))
                 {
                     ed.WriteCell(CloOffsetF + testItemColIndex.ToString(), value.ToString());
+                }
 
+                double gdSnr = 0.0, dvSnr = 0.0;
+                bool pass = false;
+                if (ParsingGpSnr(o.InnerText, ref gdSnr, ref dvSnr, ref pass))
+                {
+                    ed.WriteCell(GpGoldenSnr + testItemColIndex.ToString(), gdSnr.ToString());
+                    ed.WriteCell(GpDeviceSnr + testItemColIndex.ToString(), dvSnr.ToString());
+                    if (!pass)
+                    {
+                        ed.TextColorCells(GpDeviceSnr + testItemColIndex.ToString(), GpDeviceSnr + testItemColIndex.ToString(),
+                            errorColor);
+                    }
+                }
+
+                if (ParsingGlSnr(o.InnerText, ref gdSnr, ref dvSnr, ref pass))
+                {
+                    ed.WriteCell(GlGoldenSnr + testItemColIndex.ToString(), gdSnr.ToString());
+                    ed.WriteCell(GlDeviceSnr + testItemColIndex.ToString(), dvSnr.ToString());
+                    if (!pass)
+                    {
+                        ed.TextColorCells(GlDeviceSnr + testItemColIndex.ToString(), GlDeviceSnr + testItemColIndex.ToString(),
+                            errorColor);
+                    }
+                }
+
+                if (ParsingBdSnr(o.InnerText, ref gdSnr, ref dvSnr, ref pass))
+                {
+                    ed.WriteCell(BdGoldenSnr + testItemColIndex.ToString(), gdSnr.ToString());
+                    ed.WriteCell(BdDeviceSnr + testItemColIndex.ToString(), dvSnr.ToString());
+                    if (!pass)
+                    {
+                        ed.TextColorCells(BdDeviceSnr + testItemColIndex.ToString(), BdDeviceSnr + testItemColIndex.ToString(),
+                            errorColor);
+                    }
                 }
 
                 ++testItemColIndex;
@@ -752,24 +842,10 @@ namespace ModuleTestV8
             return true;
         }
 
-        private string GetNextCellColName(string s, int index)
-        {
-            StringBuilder sb = new StringBuilder();
-            if (s[s.Length - 1] + index > 'Z')
-            {
-
-            }
-            else
-            {
-                sb.AppendFormat("{0}{1}", s.Substring(0, s.Length - 1), ((char)(s[s.Length - 1] + index)).ToString());
-            }
-
-            return sb.ToString();
-        }
         private bool ParsingClockOffset(string s, ref int clk)
         {
-//Device clock offset -363(-0.23 ppm)                        string key = "Device clock offset ";
-        
+//Device clock offset -363(-0.23 ppm)
+            string key = "Device clock offset ";
             if (s.Contains(key))
             {
                 int start = s.LastIndexOf(key) + key.Length;
@@ -781,6 +857,123 @@ namespace ModuleTestV8
                 }
             }
             return false;
+        }
+
+        private bool ParsingGpSnr(string s, ref double gdSnr, ref double dvSnr, ref bool pass)
+        {
+            //Device average GPS SNR(0) : 48.00
+            //Golden average GPS SNR : 47.00
+            //Device GPS SNR test pass.
+
+            bool hasGdSnr = false, hasDvSnr = false;
+            string key;
+            key = "Device GPS SNR test pass";
+            pass = s.Contains(key);
+
+            key = "Device average GPS SNR";
+            if (s.Contains(key))
+            {
+                int start = s.LastIndexOf(key) + key.Length;
+                start = s.IndexOf(':', start) + 2;
+                int len = s.IndexOf('\r', start) - start;
+                if (len > 0)
+                {
+                    dvSnr = Convert.ToDouble(s.Substring(start, len));
+                    hasDvSnr = true;
+                }
+            }
+
+            key = "Golden average GPS SNR";
+            if (s.Contains(key))
+            {
+                int start = s.LastIndexOf(key) + key.Length;
+                start = s.IndexOf(':', start) + 2;
+                int len = s.IndexOf('\r', start) - start;
+                if (len > 0)
+                {
+                    gdSnr = Convert.ToDouble(s.Substring(start, len));
+                    hasGdSnr = true;
+                }
+            }
+            return hasGdSnr || hasDvSnr;
+        }
+
+        private bool ParsingGlSnr(string s, ref double gdSnr, ref double dvSnr, ref bool pass)
+        {
+            //Device average Glonass SNR(0) : 48.00
+            //Golden average Glonass SNR : 47.00
+            //Device Glonass SNR test pass.
+            
+            bool hasGdSnr = false, hasDvSnr = false;
+            string key;
+            key = "Device Glonass SNR test pass";
+            pass = s.Contains(key);
+
+            key = "Device average Glonass SNR";
+            if (s.Contains(key))
+            {
+                int start = s.LastIndexOf(key) + key.Length;
+                start = s.IndexOf(':', start) + 2;
+                int len = s.IndexOf('\r', start) - start;
+                if (len > 0)
+                {
+                    dvSnr = Convert.ToDouble(s.Substring(start, len));
+                    hasDvSnr = true;
+                }
+            }
+
+            key = "Golden average Glonass SNR";
+            if (s.Contains(key))
+            {
+                int start = s.LastIndexOf(key) + key.Length;
+                start = s.IndexOf(':', start) + 2;
+                int len = s.IndexOf('\r', start) - start;
+                if (len > 0)
+                {
+                    gdSnr = Convert.ToDouble(s.Substring(start, len));
+                    hasGdSnr = true;
+                }
+            }
+            return hasGdSnr || hasDvSnr;
+        }
+
+        private bool ParsingBdSnr(string s, ref double gdSnr, ref double dvSnr, ref bool pass)
+        {
+            //Device average Beidou SNR(0) : 48.00
+            //Golden average Beidou SNR : 47.00
+            //Device Beidou SNR test pass.
+            
+            bool hasGdSnr = false, hasDvSnr = false;
+            string key;
+            key = "Device Beidou SNR test pass";
+            pass = s.Contains(key);
+
+            key = "Device average Beidou SNR";
+            if (s.Contains(key))
+            {
+                int start = s.LastIndexOf(key) + key.Length;
+                start = s.IndexOf(':', start) + 2;
+                int len = s.IndexOf('\r', start) - start;
+                if (len > 0)
+                {
+                    dvSnr = Convert.ToDouble(s.Substring(start, len));
+                    hasDvSnr = true;
+                }
+            }
+
+            key = "Golden average Beidou SNR";
+            if (s.Contains(key))
+            {
+                int start = s.LastIndexOf(key) + key.Length;
+                start = s.IndexOf(':', start) + 2;
+                int len = s.IndexOf('\r', start) - start;
+                if (len > 0)
+                {
+                    gdSnr = Convert.ToDouble(s.Substring(start, len));
+                    hasGdSnr = true;
+                }
+            }
+            return hasGdSnr || hasDvSnr;
         }
 
         private string GetErrorString(string s)

@@ -4,7 +4,7 @@
   <description asmv2:iconFile="Icons\ModuleTest.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="ModuleTestV8" version="1.0.0.40" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="ModuleTestV8" version="1.0.0.41" language="neutral" processorArchitecture="msil" />
     <commandLine file="ModuleTestV8.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -72,38 +72,38 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ModuleTestV8.exe" size="1811968">
-      <assemblyIdentity name="ModuleTestV8" version="1.0.0.40" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ModuleTestV8.exe" size="1815552">
+      <assemblyIdentity name="ModuleTestV8" version="1.0.0.41" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>B63SMsOsUkP6Ne9XCgGfs2L64RE=</dsig:DigestValue>
+        <dsig:DigestValue>hTV22cCh8yS8ddKx56VLobSK/pg=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="en\ModuleTestV8.resources.dll" size="5120">
-      <assemblyIdentity name="ModuleTestV8.resources" version="1.0.0.40" language="en" processorArchitecture="msil" />
+      <assemblyIdentity name="ModuleTestV8.resources" version="1.0.0.41" language="en" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>NyaRapGTP1PP1fcF3pWgDz4ctTg=</dsig:DigestValue>
+        <dsig:DigestValue>ik2jw0krTCltW/9jC9iVgO5nBUA=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="zh-TW\ModuleTestV8.resources.dll" size="5120">
-      <assemblyIdentity name="ModuleTestV8.resources" version="1.0.0.40" language="zh-TW" processorArchitecture="msil" />
+      <assemblyIdentity name="ModuleTestV8.resources" version="1.0.0.41" language="zh-TW" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>dtUud80ryeNi9A+MsonRY1FfTmg=</dsig:DigestValue>
+        <dsig:DigestValue>X82B58Nd4D+1234tX0Y5ziTi+GQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
