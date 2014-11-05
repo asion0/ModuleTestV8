@@ -80,7 +80,7 @@ namespace ModuleTestV8
                 profilePath.Text = profile;
             }
             //Alex add for test
-            testBtn.Visible = true;
+            //testBtn.Visible = true;
         }
 
         private void profileSelect_Click(object sender, EventArgs e)
@@ -98,6 +98,7 @@ namespace ModuleTestV8
             }
 
         }
+
         private void ok_Click(object sender, EventArgs e)
         {
             if (!CheckWorkNo())
@@ -203,13 +204,54 @@ namespace ModuleTestV8
 
         private void test_Click(object sender, EventArgs e)
         {
-            LogSelectForm form = new LogSelectForm();
-            if (DialogResult.OK != form.ShowDialog())
-            {
-                //this.Close();
-                //return;
-            }
+            //while (Test())
+            //{
+                
+            //};
+            //return;
+
+            //LogSelectForm form = new LogSelectForm();
+            //if (DialogResult.OK != form.ShowDialog())
+            //{
+            //    //this.Close();
+            //    //return;
+            //}
         }
 
+        private bool Test()
+        {
+            OpenFileDialog ofdOpen = new System.Windows.Forms.OpenFileDialog();
+            if ((ofdOpen.InitialDirectory == null) || (ofdOpen.InitialDirectory == string.Empty))
+            {
+            //    ofdOpen.InitialDirectory = "D:\\Firmware"; 
+            }
+
+            ofdOpen.Filter =
+                            "Firmware files (*.bin)|*.bin|" +
+                            "All Files (*.*)|*.*";
+            ofdOpen.Title = "Open firmware binary file";
+            ofdOpen.Multiselect = false; 
+
+            if (ofdOpen.ShowDialog(this) == System.Windows.Forms.DialogResult.Cancel)
+            {
+                return false;
+            }
+            string filename = ofdOpen.FileName; //
+            var fs = new FileStream(filename, FileMode.Open);
+            var len = (int)fs.Length;
+
+            int crc = 0;
+            for (int i = 0; i < 0x80000 * 2; ++i)
+            {
+                if (i < len)
+                    crc += fs.ReadByte();
+                else
+                    crc += 0xff;
+                crc &= 0xffff;
+            }
+            fs.Close();
+            MessageBox.Show(crc.ToString("X4"));
+            return true;
+        }
     }
 }

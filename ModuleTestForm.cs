@@ -259,11 +259,6 @@ namespace ModuleTestV8
                 yieldTable[index].Text = "0.0%";
             }
             yieldTable[index].Text = ((double)passCount[index] / (failCount[index] + passCount[index]) * 100.0).ToString("F1") + "%";
-        //private int[] failCount;
-        //private int[] passCount;
-        //private Label[] failTable;
-        //private Label[] totalTable;
-        //private Label[] yieldTable;
         }
 
         private void SetResultDisplay(System.Windows.Forms.Label l, ResultDisplayType r)
@@ -349,7 +344,7 @@ namespace ModuleTestV8
                     noUseBarTxtBrush = Brushes.Orange;
                     noUseIcoTxtBrush = Brushes.White;
                     s = o.GetBeidouSate(i);
-                }                
+                }
                 else
                 {
                     inUseBarBrush = Brushes.Blue;

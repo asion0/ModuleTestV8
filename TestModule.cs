@@ -1380,10 +1380,10 @@ namespace ModuleTestV8
                 EndProcess(p);
                 return false;
             }
-
             String kVer = "";
             String sVer = "";
             String rev = "";
+            
             rep = p.gps.QueryVersion(DefaultCmdTimeout, ref kVer, ref sVer, ref rev);
             if (GPS_RESPONSE.ACK != rep)
             {
@@ -1442,6 +1442,7 @@ namespace ModuleTestV8
                     return false;
                 }
             }
+/*         
             if ((p.profile.fwProfile.tagAddress == 0 && p.profile.fwProfile.tagContent == 0) ||
                 (p.profile.fwProfile.tagAddress == 0xAAAAAAAA && p.profile.fwProfile.tagContent == 0x55555555))
             {   //No tag, using rom loader command
@@ -1478,35 +1479,8 @@ namespace ModuleTestV8
                 }
             }
             else
+*/
             {   //Need tag, using "$LOADER DOWNLOAD" command
-                /*
-                                if (((UInt32)p.profile.fwProfile.tagAddress ^ 0xAAAAAAAA) != 0x000FCFFC ||
-                                    ((UInt32)p.profile.fwProfile.tagContent ^ 0x55555555) != 0x00000A01)
-                                {
-                                    r.reportType = WorkerReportParam.ReportType.ShowError;
-                                    p.error = WorkerParam.ErrorType.UnsupportTagType;
-                                    p.bw.ReportProgress(0, new WorkerReportParam(r));
-                                    EndProcess(p);
-                                    return false;
-                                }
-                */
-                /*
-                              rep = p.gps.NoNmeaOutput();
-                              if (GPS_RESPONSE.ACK != rep)
-                              {
-                                  r.reportType = WorkerReportParam.ReportType.ShowError;
-                                  p.error = WorkerParam.ErrorType.ChangeBaudRateFail;
-                                  p.bw.ReportProgress(0, new WorkerReportParam(r));
-                                  EndProcess(p);
-                                  return false;
-                              }
-                              else
-                              {
-                                  r.reportType = WorkerReportParam.ReportType.ShowProgress;
-                                  r.output = "Set NMEA Output success";
-                                  p.bw.ReportProgress(0, new WorkerReportParam(r));
-                              }
-                              */
                 rep = p.gps.ChangeBaudrate((byte)p.profile.dlBaudSel, 2);
                 if (GPS_RESPONSE.ACK != rep)
                 {
@@ -1646,11 +1620,74 @@ namespace ModuleTestV8
                 r.reportType = WorkerReportParam.ReportType.ShowProgress;
                 r.output = "Total time : " + (sw.ElapsedMilliseconds / 1000).ToString() + " seconds";
                 p.bw.ReportProgress(0, new WorkerReportParam(r));
-
-                r.reportType = WorkerReportParam.ReportType.ShowFinished;
-                p.error = WorkerParam.ErrorType.NoError;
+            }
+/*
+            p.gps.Close();
+            //Wait for Flash code boot up.
+            Thread.Sleep(1000);
+            rep = p.gps.Open(p.comPort,
+                            GpsBaudRateConverter.BaudRate2Index(p.profile.fwProfile.dvBaudRate));
+            if (GPS_RESPONSE.UART_FAIL == rep)
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowError;
+                p.error = WorkerParam.ErrorType.OpenPortFail;
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                EndProcess(p);
+                return false;
+            }
+            else
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                r.output = "Open " + p.comPort + " in " +
+                    p.gps.GetBaudRate().ToString() + " success.";
                 p.bw.ReportProgress(0, new WorkerReportParam(r));
             }
+
+            for (int i = 0; i < 3; ++i)
+            {
+                rep = p.gps.QueryVersion(DefaultCmdTimeout, ref kVer, ref sVer, ref rev);
+                if (GPS_RESPONSE.ACK == rep)
+                {
+                    break;
+                }
+            }
+
+            if (GPS_RESPONSE.ACK != rep)
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowError;
+                p.error = (rep == GPS_RESPONSE.NACK) ? WorkerParam.ErrorType.QueryVersionNack : WorkerParam.ErrorType.QueryVersionTimeOut;
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                EndProcess(p);
+                return false;
+            }
+            else if (rev == "20130221")
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowError;
+                p.error = WorkerParam.ErrorType.FirmwareVersionError;
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                EndProcess(p);
+                return false;
+            }
+
+            rep = p.gps.FactoryReset();
+            if (GPS_RESPONSE.ACK != rep)
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowError;
+                p.error = (rep == GPS_RESPONSE.NACK) ? WorkerParam.ErrorType.FactoryResetNack : WorkerParam.ErrorType.FactoryResetTimeOut;
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                EndProcess(p);
+                return false;
+            }
+            else
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                r.output = "Factory Reset success";
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+            }
+*/
+            r.reportType = WorkerReportParam.ReportType.ShowFinished;
+            p.error = WorkerParam.ErrorType.NoError;
+            p.bw.ReportProgress(0, new WorkerReportParam(r));            
             EndProcess(p);
             return true;
         }
@@ -1695,6 +1732,7 @@ namespace ModuleTestV8
                 EndProcess(p);
                 return false;
             }
+
             //Reboot to ROM Code
             rep = p.gps.SetRegister(2000, 0x2000F050, 0x00000000);
             if (GPS_RESPONSE.ACK != rep)
