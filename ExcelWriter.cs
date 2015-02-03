@@ -597,6 +597,8 @@ namespace ModuleTestV8
                 ed.InitDocument();
                 ParsingResultXml(source, ed);
                 ed.Save();
+                testItemColIndex = 31;
+
             }
             return;
         }
@@ -732,7 +734,7 @@ namespace ModuleTestV8
             Color stColor1 = Color.FromArgb(230, 230, 230);
             Color stColor2 = Color.FromArgb(255, 255, 255);
             Color errorColor = Color.FromArgb(250, 0, 0);
-
+            //testItemColIndex = 31;
 
             XmlElement e1 = (XmlElement)itemNode.SelectSingleNode("UISetting");
             XmlElement e2 = (XmlElement)itemNode.SelectSingleNode("SnrOffset");
