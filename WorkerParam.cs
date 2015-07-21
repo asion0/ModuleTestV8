@@ -66,11 +66,15 @@ namespace ModuleTestV8
             IoControllerFail = 1UL << 46,
             TestAntennaFail = 1UL << 47,
             TestUART2Fail = 1UL << 48,
+            McuFail = 1UL << 49,
+            OdoPluseFail = 1UL << 50,
+            OdoDirectionFail = 1UL << 51,
+            GyroFail = 1UL << 52,
 
-            TestErr10 = 1UL << 49,
+            TestErr10 = 1UL << 53,
         }
 
-        public const int ErrorCount = 49;
+        public const int ErrorCount = 53;
         public static String GetErrorString(ErrorType er)
         {
             if (ErrorType.NoError == er)

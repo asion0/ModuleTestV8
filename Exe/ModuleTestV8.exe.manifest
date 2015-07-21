@@ -4,7 +4,7 @@
   <description asmv2:iconFile="Icons\ModuleTest.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="ModuleTestV8" version="1.0.0.46" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="ModuleTestV8" version="1.0.0.48" language="neutral" processorArchitecture="msil" />
     <commandLine file="ModuleTestV8.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -33,7 +33,7 @@
   <dependency>
     <dependentOS>
       <osVersionInfo>
-        <os majorVersion="4" minorVersion="10" buildNumber="0" servicePackMajor="0" />
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
       </osVersionInfo>
     </dependentOS>
   </dependency>
@@ -45,6 +45,16 @@
   <dependency>
     <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
       <assemblyIdentity name="stdole" version="7.0.3300.0" publicKeyToken="B03F5F7F11D50A3A" language="neutral" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="System.Data.SQLite" version="1.0.66.0" publicKeyToken="DB937BC2D44FF139" language="neutral" processorArchitecture="x86" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="WindowsBase" version="3.0.0.0" publicKeyToken="31bf3856ad364e35" language="neutral" processorArchitecture="msil" />
     </dependentAssembly>
   </dependency>
   <dependency>
@@ -72,38 +82,38 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ModuleTestV8.exe" size="1823232">
-      <assemblyIdentity name="ModuleTestV8" version="1.0.0.46" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ModuleTestV8.exe" size="1835008">
+      <assemblyIdentity name="ModuleTestV8" version="1.0.0.48" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>VKaBWkbeFRFtr3oG2QUCXc8BKdI=</dsig:DigestValue>
+        <dsig:DigestValue>34pq+nIe3y5lZCjQD646lESMTgA=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="en\ModuleTestV8.resources.dll" size="5120">
-      <assemblyIdentity name="ModuleTestV8.resources" version="1.0.0.46" language="en" processorArchitecture="msil" />
+      <assemblyIdentity name="ModuleTestV8.resources" version="1.0.0.48" language="en" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>iyzSYmO5RloPH/qnTzKbIQW++2Q=</dsig:DigestValue>
+        <dsig:DigestValue>sAXtinkUVPv2MbxkXBZtHGslRXQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="zh-TW\ModuleTestV8.resources.dll" size="5120">
-      <assemblyIdentity name="ModuleTestV8.resources" version="1.0.0.46" language="zh-TW" processorArchitecture="msil" />
+      <assemblyIdentity name="ModuleTestV8.resources" version="1.0.0.48" language="zh-TW" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>Rc9PsHOPv5sanPmZb+P7XXnuj5g=</dsig:DigestValue>
+        <dsig:DigestValue>wx7OjsDhDwemd0rjDwFPWSJybzw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -116,18 +126,6 @@
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
         <dsig:DigestValue>qLZAFskrUjHV/TFbvevZR7hSGP4=</dsig:DigestValue>
-      </hash>
-    </dependentAssembly>
-  </dependency>
-  <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="System.Data.SQLite.dll" size="904704">
-      <assemblyIdentity name="System.Data.SQLite" version="1.0.66.0" publicKeyToken="DB937BC2D44FF139" language="neutral" processorArchitecture="x86" />
-      <hash>
-        <dsig:Transforms>
-          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-        </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>EFF0T2VKbSBZCXD5M14e8kbw+mc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -158,13 +156,13 @@
       <dsig:DigestValue>Mq7vfT0BRIB+Qcu4cXUU81eseaI=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="ModuleTestV8.exe.config" size="6109">
+  <file name="ModuleTestV8.exe.config" size="6139">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>05ybYjM3H0Rp6TAwALoMNAwasTk=</dsig:DigestValue>
+      <dsig:DigestValue>jIvmxGDr4JOw/2BBV2VVXPn+W8M=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

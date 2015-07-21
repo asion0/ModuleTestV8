@@ -4,14 +4,14 @@
   <description asmv2:publisher="ModuleTestV8" asmv2:product="ModuleTestV8" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <deployment install="true" mapFileExtensions="true" />
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="ModuleTestV8.exe.manifest" size="8806">
+    <dependentAssembly dependencyType="install" codebase="ModuleTestV8.exe.manifest" size="8720">
       <assemblyIdentity name="ModuleTestV8.exe" version="1.0.0.2" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>dXYRCVkhB3WnMCASam+y3t8+ajI=</dsig:DigestValue>
+        <dsig:DigestValue>UNunmDkPv5+1xJMRVjP4jGMXME4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

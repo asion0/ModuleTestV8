@@ -590,6 +590,13 @@ namespace ModuleTestV8
 
             return true;
         }
+
+        public int GetTotalTestPeriod()
+        {
+            int defaultTestPeriod = (testDrCyro) ? 17 : 0;
+            return defaultTestPeriod + snrTestPeriod;
+        }
+
         public bool SaveToIniFile(String path)
         {
             if (File.Exists(path))

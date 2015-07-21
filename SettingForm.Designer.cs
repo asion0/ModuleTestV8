@@ -96,6 +96,7 @@
             this.checkPromCrc = new System.Windows.Forms.CheckBox();
             this.label18 = new System.Windows.Forms.Label();
             this.dlBaudSel = new System.Windows.Forms.ComboBox();
+            this.testUart2TxRx = new System.Windows.Forms.CheckBox();
             this.testAntenna = new System.Windows.Forms.CheckBox();
             this.testIo = new System.Windows.Forms.CheckBox();
             this.writeTag = new System.Windows.Forms.CheckBox();
@@ -109,7 +110,6 @@
             this.promFileName = new System.Windows.Forms.TextBox();
             this.saveAs = new System.Windows.Forms.Button();
             this.loadFrom = new System.Windows.Forms.Button();
-            this.testUart2TxRx = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -372,26 +372,28 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(29, 336);
+            this.label8.Location = new System.Drawing.Point(29, 408);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(46, 12);
             this.label8.TabIndex = 6;
             this.label8.Text = "Duration";
+            this.label8.Visible = false;
             // 
             // testDrDuration
             // 
             this.testDrDuration.Enabled = false;
-            this.testDrDuration.Location = new System.Drawing.Point(85, 331);
+            this.testDrDuration.Location = new System.Drawing.Point(85, 403);
             this.testDrDuration.MaxLength = 4;
             this.testDrDuration.Name = "testDrDuration";
             this.testDrDuration.Size = new System.Drawing.Size(84, 22);
             this.testDrDuration.TabIndex = 9;
+            this.testDrDuration.Visible = false;
             this.testDrDuration.TextChanged += new System.EventHandler(this.testDrDuration_TextChanged);
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(55, 378);
+            this.label9.Location = new System.Drawing.Point(37, 352);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(26, 12);
             this.label9.TabIndex = 6;
@@ -400,7 +402,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(54, 404);
+            this.label10.Location = new System.Drawing.Point(36, 378);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(25, 12);
             this.label10.TabIndex = 6;
@@ -409,7 +411,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(83, 360);
+            this.label11.Location = new System.Drawing.Point(65, 334);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(53, 12);
             this.label11.TabIndex = 6;
@@ -418,7 +420,7 @@
             // uslClockWise
             // 
             this.uslClockWise.Enabled = false;
-            this.uslClockWise.Location = new System.Drawing.Point(85, 375);
+            this.uslClockWise.Location = new System.Drawing.Point(67, 349);
             this.uslClockWise.MaxLength = 10;
             this.uslClockWise.Name = "uslClockWise";
             this.uslClockWise.Size = new System.Drawing.Size(62, 22);
@@ -428,7 +430,7 @@
             // lslClockWise
             // 
             this.lslClockWise.Enabled = false;
-            this.lslClockWise.Location = new System.Drawing.Point(85, 401);
+            this.lslClockWise.Location = new System.Drawing.Point(67, 375);
             this.lslClockWise.MaxLength = 10;
             this.lslClockWise.Name = "lslClockWise";
             this.lslClockWise.Size = new System.Drawing.Size(62, 22);
@@ -438,7 +440,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(150, 360);
+            this.label13.Location = new System.Drawing.Point(132, 334);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(70, 12);
             this.label13.TabIndex = 6;
@@ -447,7 +449,7 @@
             // uslAnticlockWise
             // 
             this.uslAnticlockWise.Enabled = false;
-            this.uslAnticlockWise.Location = new System.Drawing.Point(154, 375);
+            this.uslAnticlockWise.Location = new System.Drawing.Point(136, 349);
             this.uslAnticlockWise.MaxLength = 10;
             this.uslAnticlockWise.Name = "uslAnticlockWise";
             this.uslAnticlockWise.Size = new System.Drawing.Size(62, 22);
@@ -457,7 +459,7 @@
             // lslAnticlockWise
             // 
             this.lslAnticlockWise.Enabled = false;
-            this.lslAnticlockWise.Location = new System.Drawing.Point(154, 401);
+            this.lslAnticlockWise.Location = new System.Drawing.Point(136, 375);
             this.lslAnticlockWise.MaxLength = 10;
             this.lslAnticlockWise.Name = "lslAnticlockWise";
             this.lslAnticlockWise.Size = new System.Drawing.Size(62, 22);
@@ -841,11 +843,12 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(175, 336);
+            this.label18.Location = new System.Drawing.Point(175, 408);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(49, 12);
             this.label18.TabIndex = 10;
             this.label18.Text = "second(s)";
+            this.label18.Visible = false;
             // 
             // dlBaudSel
             // 
@@ -856,6 +859,17 @@
             this.dlBaudSel.Size = new System.Drawing.Size(100, 20);
             this.dlBaudSel.TabIndex = 0;
             this.dlBaudSel.SelectedIndexChanged += new System.EventHandler(this.dlBaudSel_SelectedIndexChanged);
+            // 
+            // testUart2TxRx
+            // 
+            this.testUart2TxRx.AutoSize = true;
+            this.testUart2TxRx.Location = new System.Drawing.Point(14, 208);
+            this.testUart2TxRx.Name = "testUart2TxRx";
+            this.testUart2TxRx.Size = new System.Drawing.Size(161, 16);
+            this.testUart2TxRx.TabIndex = 0;
+            this.testUart2TxRx.Text = "Test UART2 TX/RX as GPIO";
+            this.testUart2TxRx.UseVisualStyleBackColor = true;
+            this.testUart2TxRx.CheckedChanged += new System.EventHandler(this.testUart2TxRx_CheckedChanged);
             // 
             // testAntenna
             // 
@@ -919,6 +933,7 @@
             this.label19.Size = new System.Drawing.Size(92, 12);
             this.label19.TabIndex = 6;
             this.label19.Text = "Threshold of COG";
+            this.label19.Visible = false;
             // 
             // thresholdCogWise
             // 
@@ -928,6 +943,7 @@
             this.thresholdCogWise.Name = "thresholdCogWise";
             this.thresholdCogWise.Size = new System.Drawing.Size(84, 22);
             this.thresholdCogWise.TabIndex = 14;
+            this.thresholdCogWise.Visible = false;
             this.thresholdCogWise.TextChanged += new System.EventHandler(this.thresholdCogWise_TextChanged);
             // 
             // label4
@@ -991,17 +1007,6 @@
             this.loadFrom.Text = "Load From...";
             this.loadFrom.UseVisualStyleBackColor = true;
             this.loadFrom.Click += new System.EventHandler(this.loadFrom_Click);
-            // 
-            // testUart2TxRx
-            // 
-            this.testUart2TxRx.AutoSize = true;
-            this.testUart2TxRx.Location = new System.Drawing.Point(14, 208);
-            this.testUart2TxRx.Name = "testUart2TxRx";
-            this.testUart2TxRx.Size = new System.Drawing.Size(161, 16);
-            this.testUart2TxRx.TabIndex = 0;
-            this.testUart2TxRx.Text = "Test UART2 TX/RX as GPIO";
-            this.testUart2TxRx.UseVisualStyleBackColor = true;
-            this.testUart2TxRx.CheckedChanged += new System.EventHandler(this.testUart2TxRx_CheckedChanged);
             // 
             // SettingForm
             // 

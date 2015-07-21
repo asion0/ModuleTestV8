@@ -182,6 +182,7 @@
             this.startiCacheTest = new System.Windows.Forms.Button();
             this.anCtrlSel = new System.Windows.Forms.ComboBox();
             this.anCtrlSel_t = new System.Windows.Forms.Label();
+            this.drResetBtn = new System.Windows.Forms.Button();
             this.gdPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gdSnrChart)).BeginInit();
             this.a1Panel.SuspendLayout();
@@ -1747,18 +1748,29 @@
             // anCtrlSel_t
             // 
             this.anCtrlSel_t.AutoSize = true;
-            this.anCtrlSel_t.Location = new System.Drawing.Point(274, 97);
+            this.anCtrlSel_t.Location = new System.Drawing.Point(274, 98);
             this.anCtrlSel_t.Name = "anCtrlSel_t";
-            this.anCtrlSel_t.Size = new System.Drawing.Size(65, 12);
+            this.anCtrlSel_t.Size = new System.Drawing.Size(66, 12);
             this.anCtrlSel_t.TabIndex = 2;
-            this.anCtrlSel_t.Text = "Antenna IO :";
+            this.anCtrlSel_t.Text = "MCU COM :";
             this.anCtrlSel_t.Visible = false;
             // 
-            // Form1
+            // drResetBtn
+            // 
+            this.drResetBtn.Location = new System.Drawing.Point(432, 93);
+            this.drResetBtn.Name = "drResetBtn";
+            this.drResetBtn.Size = new System.Drawing.Size(95, 23);
+            this.drResetBtn.TabIndex = 12;
+            this.drResetBtn.Text = "DR Reset";
+            this.drResetBtn.UseVisualStyleBackColor = true;
+            this.drResetBtn.Visible = false;
+            // 
+            // ModuleTestForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1068, 628);
+            this.Controls.Add(this.drResetBtn);
             this.Controls.Add(this.label21);
             this.Controls.Add(this.label45);
             this.Controls.Add(this.label41);
@@ -1828,7 +1840,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "ModuleTestForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -2027,6 +2039,7 @@
         private System.Windows.Forms.Button startiCacheTest;
         private System.Windows.Forms.ComboBox anCtrlSel;
         private System.Windows.Forms.Label anCtrlSel_t;
+        private System.Windows.Forms.Button drResetBtn;
     }
 }
 

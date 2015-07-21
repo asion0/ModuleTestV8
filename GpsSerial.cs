@@ -37,7 +37,7 @@ namespace ModuleTestV8
 
     public class BinaryCommand
     {
-	    private const int CommandExtraSize = 7;
+        private const int CommandExtraSize = 7;
         private const int CommandHeaderSize = 4;
 
         private byte[] commandData;
@@ -53,19 +53,19 @@ namespace ModuleTestV8
         }
 
         private void SetData(byte[] data)
-	    {
-		    commandData = new byte[CommandExtraSize + data.Length];
+        {
+            commandData = new byte[CommandExtraSize + data.Length];
             data.CopyTo(commandData, CommandHeaderSize);
-	    }
+        }
 
-        public byte[] GetBuffer() 
-	    { 
-		    byte checkSum = 0;
+        public byte[] GetBuffer()
+        {
+            byte checkSum = 0;
             for (int i = 0; i < commandData.Length - CommandExtraSize; ++i)
-		    {
-			    checkSum ^= commandData[i + CommandHeaderSize];	
-		    }
-            
+            {
+                checkSum ^= commandData[i + CommandHeaderSize];
+            }
+
             commandData[0] = (byte)0xA0;
             commandData[1] = (byte)0xA1;
             commandData[2] = (byte)((commandData.Length - CommandExtraSize) >> 8);
@@ -73,11 +73,11 @@ namespace ModuleTestV8
             commandData[commandData.Length - 3] = checkSum;
             commandData[commandData.Length - 2] = (byte)0x0D;
             commandData[commandData.Length - 1] = (byte)0x0A;
-		    return commandData; 
-	    }
+            return commandData;
+        }
 
-	    public int Size()
-	    {
+        public int Size()
+        {
             return commandData.Length;
         }
     }
@@ -93,7 +93,7 @@ namespace ModuleTestV8
         CHKSUM_OK,
         CHKSUM_FAIL,
         OK,
-//        END,
+        //        END,
         ERROR1,
         ERROR2,
         ERROR3,
@@ -105,7 +105,7 @@ namespace ModuleTestV8
     [Synchronization]
     public class SkytraqGps
     {
-        SerialPort serial;
+        private SerialPort serial = null;
 
         private CultureInfo enUsCulture = CultureInfo.GetCultureInfo("en-US");
 
@@ -135,6 +135,11 @@ namespace ModuleTestV8
         #region UART function
         public GPS_RESPONSE Open(string com, int baudrateIdx)
         {
+            if (serial != null && serial.IsOpen)
+            {
+                serial.Close();
+            }
+
             serial = new SerialPort(com, GpsBaudRateConverter.Index2BaudRate(baudrateIdx));
             try
             {
@@ -158,7 +163,13 @@ namespace ModuleTestV8
 
         public GPS_RESPONSE Close()
         {
-            serial.Close();
+            if (serial != null && serial.IsOpen)
+            {
+                serial.Close();
+                serial.Dispose();
+                serial = null;
+                return GPS_RESPONSE.UART_OK;
+            }
             return GPS_RESPONSE.NONE;
         }
 
@@ -168,16 +179,19 @@ namespace ModuleTestV8
             return serial.ReadLine() + (Char)0x0a;
         }
 
-        public int ReadLineNoWait(byte[] buff, int len)
+        public int ReadLineNoWait(byte[] buff, int len, int timeOut)
         {
             byte data;
             int crecv = 0;
-            int timeout = 10;
             int read_bytes;
 
             try
             {
-                while (timeout > 0)
+                Stopwatch sw = new Stopwatch();
+                sw.Reset();
+                sw.Start();
+
+                while (sw.ElapsedMilliseconds < timeOut)
                 {
                     read_bytes = serial.BytesToRead;
                     while (read_bytes > 0 && crecv < len)
@@ -199,19 +213,12 @@ namespace ModuleTestV8
                             else
                             {
                                 //Debug.Print(new string(Encoding.ASCII.GetChars(buff, 0, crecv)));
-                                timeout--;
                                 return crecv;
                             }
                         }
-
-//                        if (terminate_online) break;
                     }
-//                    if (terminate_online) break;
-                    timeout--;
-
                     Thread.Sleep(10);
                 }
-
                 return crecv;
             }
             catch (Exception ex)
@@ -336,21 +343,12 @@ namespace ModuleTestV8
                         }
                         index = 0;
                         received.Initialize();
-
-                            /*
-                        else if (ack.Equals("END\0"))
-                        {
-                            return GPS_RESPONSE.END;
-                        }
-                        else
-                        {
-                            return GPS_RESPONSE.TIMEOUT;
-                        }
-                             */
                     }
                 }
-                Thread.Sleep(10);
-                //timeout--;
+                else
+                {
+                    Thread.Sleep(10);
+                }
             }
             return GPS_RESPONSE.TIMEOUT;
         }
@@ -399,6 +397,20 @@ namespace ModuleTestV8
             return;
         }
 
+        private void SendDummyCmdNoAck(int len)
+        {
+            ClearQueue();
+            serial.NewLine = "\0";
+            byte[] buf = new byte[1];
+            buf[0] = 0;
+            for (int i = 0; i < len; ++i)
+            {
+                serial.Write(buf, 0, 1);
+            }
+            //serial.Write(cmd.ToCharArray(), 0, len);
+            return;
+        }
+
         public GPS_RESPONSE ChangeBaudrate(byte baudrateIndex, byte mode)
         {
             GPS_RESPONSE retval = GPS_RESPONSE.NONE;
@@ -431,7 +443,7 @@ namespace ModuleTestV8
             sw.Start();
             while (sw.ElapsedMilliseconds < timeout)
             {
-                int l =  ReadBinLine(ref received, timeout);
+                int l = ReadBinLine(ref received, timeout);
                 if (cmdId == GpsMsgParser.CheckBinaryCommand(received, l))
                 {
                     received.CopyTo(retCmd, 0);
@@ -516,6 +528,110 @@ namespace ModuleTestV8
             return retval;
         }
 
+        public GPS_RESPONSE InitControllerIO(UInt32 ioList, UInt32 ioDirection)
+        {
+            GPS_RESPONSE retval = GPS_RESPONSE.NONE;
+            //6f 01 d0 11 34 7e d0 00 00 00
+            byte[] cmdData = new byte[10];
+            byte[] recv_buff = new byte[128];
+
+            cmdData[0] = 0x6f;
+            cmdData[1] = 0x01;
+            cmdData[2] = (byte)(ioList >> 24 & 0xFF);
+            cmdData[3] = (byte)(ioList >> 16 & 0xFF);
+            cmdData[4] = (byte)(ioList >> 8 & 0xFF);
+            cmdData[5] = (byte)(ioList & 0xFF);
+            cmdData[6] = (byte)(ioDirection >> 24 & 0xFF);
+            cmdData[7] = (byte)(ioDirection >> 16 & 0xFF);
+            cmdData[8] = (byte)(ioDirection >> 8 & 0xFF);
+            cmdData[9] = (byte)(ioDirection & 0xFF);
+
+            BinaryCommand cmd = new BinaryCommand(cmdData);
+            retval = SendCmdAck(cmd.GetBuffer(), cmd.Size(), 2000);
+            return retval;
+        }
+
+        public GPS_RESPONSE SetControllerIO(UInt32 ioHigh, UInt32 ioLow)
+        {
+            GPS_RESPONSE retval = GPS_RESPONSE.NONE;
+            //6f 01 d0 11 34 7e d0 00 00 00
+            byte[] cmdData = new byte[10];
+            byte[] recv_buff = new byte[128];
+
+            cmdData[0] = 0x6f;
+            cmdData[1] = 0x02;
+            cmdData[2] = (byte)(ioHigh >> 24 & 0xFF);
+            cmdData[3] = (byte)(ioHigh >> 16 & 0xFF);
+            cmdData[4] = (byte)(ioHigh >> 8 & 0xFF);
+            cmdData[5] = (byte)(ioHigh & 0xFF);
+            cmdData[6] = (byte)(ioLow >> 24 & 0xFF);
+            cmdData[7] = (byte)(ioLow >> 16 & 0xFF);
+            cmdData[8] = (byte)(ioLow >> 8 & 0xFF);
+            cmdData[9] = (byte)(ioLow & 0xFF);
+
+            BinaryCommand cmd = new BinaryCommand(cmdData);
+            retval = SendCmdAck(cmd.GetBuffer(), cmd.Size(), 2000);
+            return retval;
+        }
+
+        public GPS_RESPONSE SetControllerMoto(byte function, byte homeIo, byte ccwIo, byte cwIo, byte dirIo, byte clkIo,
+            UInt32 clkTimes, UInt32 clkDelay)
+        {   
+            GPS_RESPONSE retval = GPS_RESPONSE.NONE;
+            byte[] cmdData = new byte[16];
+            byte[] recv_buff = new byte[128];
+
+            cmdData[0] = 0x6f;
+            cmdData[1] = 0x03;
+            cmdData[2] = function;
+            cmdData[3] = homeIo;
+            cmdData[4] = ccwIo;
+            cmdData[5] = cwIo;
+            cmdData[6] = dirIo;
+            cmdData[7] = clkIo;
+            cmdData[8] = (byte)(clkTimes >> 24 & 0xFF);
+            cmdData[9] = (byte)(clkTimes >> 16 & 0xFF);
+            cmdData[10] = (byte)(clkTimes >> 8 & 0xFF);
+            cmdData[11] = (byte)(clkTimes & 0xFF);
+            cmdData[12] = (byte)(clkDelay >> 24 & 0xFF);
+            cmdData[13] = (byte)(clkDelay >> 16 & 0xFF);
+            cmdData[14] = (byte)(clkDelay >> 8 & 0xFF);
+            cmdData[15] = (byte)(clkDelay & 0xFF);
+
+            BinaryCommand cmd = new BinaryCommand(cmdData);
+            retval = SendCmdAck(cmd.GetBuffer(), cmd.Size(), 2000);
+            return retval;
+        }
+
+        public GPS_RESPONSE QueryDrStatus(int timeout, ref UInt32 temp, ref float gyro, ref UInt32 odo_plus, ref byte odo_bw)
+        {
+            GPS_RESPONSE retval = GPS_RESPONSE.NONE;
+            byte[] cmdData = new byte[1];
+            cmdData[0] = 0x7F;
+
+            BinaryCommand cmd = new BinaryCommand(cmdData);
+            retval = SendCmdAck(cmd.GetBuffer(), cmd.Size(), timeout);
+            if (retval == GPS_RESPONSE.ACK)
+            {
+                byte[] retCmd = new byte[128];
+                retval = WaitReturnCommand(0xF0, retCmd, 1000);
+
+                temp = (UInt32)retCmd[5] << 8 | (UInt32)retCmd[6];
+                UInt32 data = (UInt32)retCmd[7] << 24 | (UInt32)retCmd[8] << 16 |
+                    (UInt32)retCmd[9] << 8 | (UInt32)retCmd[10];
+
+                byte[] t = new byte[4];
+                t[0] = retCmd[10]; t[1] = retCmd[9]; t[2] = retCmd[8]; t[3] = retCmd[7];
+                //t[0] = retCmd[7]; t[1] = retCmd[8]; t[2] = retCmd[9]; t[3] = retCmd[10];
+                gyro = System.BitConverter.ToSingle(t, 0);
+                //gyro = System.BitConverter.ToSingle(retCmd, 7);
+
+                odo_plus = (UInt32)retCmd[11] << 8 | (UInt32)retCmd[12];
+                odo_bw = retCmd[13];
+            }
+            return retval;
+        }
+
         public GPS_RESPONSE AntennaIO(byte type)
         {
             GPS_RESPONSE retval = GPS_RESPONSE.NONE;
@@ -537,6 +653,30 @@ namespace ModuleTestV8
                 byte[] retCmd = new byte[128];
                 retval = WaitReturnCommand(0xc0, retCmd, 1000);
             }
+            return retval;
+        }
+
+        public GPS_RESPONSE SetControllerClock(byte function, UInt32 clockLength, UInt32 ioList)
+        {
+            GPS_RESPONSE retval = GPS_RESPONSE.NONE;
+            //6f 01 d0 11 34 7e d0 00 00 00
+            byte[] cmdData = new byte[11];
+            byte[] recv_buff = new byte[128];
+
+            cmdData[0] = 0x6f;
+            cmdData[1] = 0x04;
+            cmdData[2] = function;
+            cmdData[3] = (byte)(clockLength >> 24 & 0xFF);
+            cmdData[4] = (byte)(clockLength >> 16 & 0xFF);
+            cmdData[5] = (byte)(clockLength >> 8 & 0xFF);
+            cmdData[6] = (byte)(clockLength & 0xFF);
+            cmdData[7] = (byte)(ioList >> 24 & 0xFF);
+            cmdData[8] = (byte)(ioList >> 16 & 0xFF);
+            cmdData[9] = (byte)(ioList >> 8 & 0xFF);
+            cmdData[10] = (byte)(ioList & 0xFF);
+
+            BinaryCommand cmd = new BinaryCommand(cmdData);
+            retval = SendCmdAck(cmd.GetBuffer(), cmd.Size(), 2000);
             return retval;
         }
 
@@ -569,14 +709,14 @@ namespace ModuleTestV8
 
             BinaryCommand cmd = new BinaryCommand(cmdData);
 
-            retval = SendCmdAck(cmd.GetBuffer(), cmd.Size(), 3000);
+            retval = SendCmdAck(cmd.GetBuffer(), cmd.Size(), 2000);
             if (retval == GPS_RESPONSE.ACK)
             {
                 byte[] retCmd = new byte[128];
-                retval = WaitReturnCommand(0xFE, retCmd, 3000);
+                retval = WaitReturnCommand(0xFE, retCmd, 2000);
                 if (retval != GPS_RESPONSE.ACK)
                 {
-                   // int a = 0;
+                    // int a = 0;
                 }
                 prn = (UInt32)retCmd[5] << 8 | (UInt32)retCmd[6];
                 freq = (UInt32)retCmd[7] << 8 | (UInt32)retCmd[8];
@@ -594,10 +734,10 @@ namespace ModuleTestV8
             GPS_RESPONSE retval = GPS_RESPONSE.NONE;
             byte[] cmdData = new byte[9];
             cmdData[0] = 0x7C;
-            cmdData[1] = (byte)(gdClockOffset >> 24 & 0xFF);;
-            cmdData[2] = (byte)(gdClockOffset >> 16 & 0xFF);;
-            cmdData[3] = (byte)(gdClockOffset >> 8 & 0xFF);;
-            cmdData[4] = (byte)(gdClockOffset & 0xFF);;
+            cmdData[1] = (byte)(gdClockOffset >> 24 & 0xFF); ;
+            cmdData[2] = (byte)(gdClockOffset >> 16 & 0xFF); ;
+            cmdData[3] = (byte)(gdClockOffset >> 8 & 0xFF); ;
+            cmdData[4] = (byte)(gdClockOffset & 0xFF); ;
             cmdData[5] = (byte)(prn >> 8 & 0xFF);
             cmdData[6] = (byte)(prn & 0xFF);
             cmdData[7] = (byte)(freq >> 8 & 0xFF);
@@ -698,7 +838,7 @@ namespace ModuleTestV8
             return retval;
         }
 
-        public GPS_RESPONSE SendColdStart(int retry)
+        public GPS_RESPONSE SendColdStart(int retry, int timeout)
         {
             GPS_RESPONSE retval = GPS_RESPONSE.NONE;
             byte[] cmdData = new byte[15];
@@ -708,12 +848,47 @@ namespace ModuleTestV8
             BinaryCommand cmd = new BinaryCommand(cmdData);
             for (int i = 0; i < retry; ++i)
             {
-                retval = SendCmdAck(cmd.GetBuffer(), cmd.Size(), 2000);
+                retval = SendCmdAck(cmd.GetBuffer(), cmd.Size(), timeout);
                 if (retval == GPS_RESPONSE.ACK)
                 {
                     break;
                 }
             }
+            return retval;
+        }
+
+        public GPS_RESPONSE SetGpsEphemeris(string ephFile)
+        {
+            GPS_RESPONSE retval = GPS_RESPONSE.NONE;
+            byte[] cmdData = new byte[87];
+            byte[] ephData = new byte[86];
+            cmdData[0] = 0x41;
+            int ephStart = 0;
+            FileStream fileStream = new FileStream(ephFile, FileMode.Open, FileAccess.Read);
+            for (int i = 0; i < 32; ++i)
+            {
+                fileStream.Read(ephData, 0, 86);
+                ephStart += 86;
+
+                int zeroCount = 0;
+                foreach (byte b in ephData)
+                {
+                    if (b == 0)
+                        zeroCount++;
+                }
+                if (zeroCount > 60)
+                    continue;
+
+                System.Array.Copy(ephData, 0, cmdData, 1, 86);
+                BinaryCommand cmd = new BinaryCommand(cmdData);
+
+                retval = SendCmdAck(cmd.GetBuffer(), cmd.Size(), 4000);
+                if (retval != GPS_RESPONSE.ACK)
+                {
+                    break;
+                }
+            }
+            fileStream.Close();
             return retval;
         }
 
@@ -746,8 +921,8 @@ namespace ModuleTestV8
                 kVer = retCmd[7].ToString("00") + "." + retCmd[8].ToString("00") + "." + retCmd[9].ToString("00");
                 sVer = retCmd[11].ToString("00") + "." + retCmd[12].ToString("00") + "." + retCmd[13].ToString("00");
                 rev = (retCmd[15] + 2000).ToString("0000") + retCmd[16].ToString("00") + retCmd[17].ToString("00");
-            } 
-            
+            }
+
             return retval;
         }
 
@@ -799,8 +974,8 @@ namespace ModuleTestV8
             BinaryCommand cmd = new BinaryCommand(cmdData);
             retval = SendCmdAck(cmd.GetBuffer(), cmd.Size(), timeout);
             return retval;
-        }       
-  
+        }
+
         public GPS_RESPONSE SendRomBinSize(int length, byte checksum)
         {//"BINSIZE = %d Checksum = %d %lld ", promLen, mycheck, check);
             GPS_RESPONSE retval = GPS_RESPONSE.NONE;
@@ -808,6 +983,13 @@ namespace ModuleTestV8
                 " " + (length + checksum).ToString() + " ";
 
             retval = SendStringCmdAck(cmd, cmd.Length, 10000, "OK\0");
+            return retval;
+        }
+
+        public GPS_RESPONSE SendTestSrecCmd(String cmd, int timeout)
+        {
+            GPS_RESPONSE retval = GPS_RESPONSE.NONE;
+            retval = SendStringCmdAck(cmd, cmd.Length, timeout, "OK\0");
             return retval;
         }
 
@@ -822,16 +1004,26 @@ namespace ModuleTestV8
 
             retval = SendStringCmdAck(cmd, cmd.Length, 10000, "OK\0");
             return retval;
-        }     
+        }
 
-        public GPS_RESPONSE SendLoaderDownload()
+        public GPS_RESPONSE SendLoaderDownload(ref String dbgOutput)
         {
             GPS_RESPONSE retval = GPS_RESPONSE.NONE;
             String cmd = "$LOADER DOWNLOAD";
             //WAIT
-            retval = SendStringCmdAck(cmd, cmd.Length, 1000, "OK\0");
-            //OK
-            //retval = WaitStringAck(1000, "OK");
+            for (int i = 0; i < 5; ++i)
+            {
+                dbgOutput += "send [" + cmd + "];";
+                retval = SendStringCmdAck(cmd, cmd.Length, 1000, "OK\0");
+                if (GPS_RESPONSE.OK == retval)
+                {
+                    dbgOutput += "ack [OK];";
+                    break;
+                }
+                dbgOutput += "send dummy data;";
+                SendDummyCmdNoAck(30);
+                Thread.Sleep(500);
+            }
             return retval;
         }
 
@@ -841,7 +1033,7 @@ namespace ModuleTestV8
             String[] delimiterChars = { "\r\n" };
             String[] lines = s.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach(String l in lines)
+            foreach (String l in lines)
             {
                 String line = l + (char)0x0a;
                 SendStringCmdNoAck(line, line.Length);
@@ -850,7 +1042,7 @@ namespace ModuleTestV8
             //OK
             retval = WaitStringAck(1000, "END\0");
             return retval;
-        }  
+        }
         #endregion
     }
 }

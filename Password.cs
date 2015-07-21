@@ -41,11 +41,6 @@ namespace ModuleTestV8
             cheats = 0;
         }
 
-        private void Password_KeyUp(object sender, KeyEventArgs e)
-        {
-            
-        }
-
         private static int[] cheatCode = { 0x26, 0x26, 0x28, 0x28, 
                 0x25, 0x27, 0x25, 0x27, 0x42, 0x41 };
         private int cheats = 0;

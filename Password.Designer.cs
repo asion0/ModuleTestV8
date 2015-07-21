@@ -90,7 +90,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Password";
             this.Load += new System.EventHandler(this.Password_Load);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Password_KeyUp);
             this.ResumeLayout(false);
             this.PerformLayout();
 

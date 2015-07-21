@@ -1005,7 +1005,7 @@ namespace ModuleTestV8
 
         private void UpdatePanelInfo()
         {
-            testCounter.Text = profile.snrTestPeriod.ToString();
+            testCounter.Text = profile.GetTotalTestPeriod().ToString();
             testCounter.ForeColor = Color.Black;
 
             moduleName.Text = profile.moduleName;
@@ -1042,9 +1042,10 @@ namespace ModuleTestV8
             dlBaudrate.Text = GpsBaudRateConverter.Index2BaudRate(profile.dlBaudSel).ToString();
             dlBaudrate.Enabled = profile.enableDownload;
             dlBaudrateTitle.Enabled = profile.enableDownload;
-            anCtrlSel.Visible = profile.testAntenna || profile.testUart2TxRx;
-            anCtrlSel_t.Visible = profile.testAntenna || profile.testUart2TxRx;
-            
+
+            anCtrlSel.Visible = profile.testAntenna || profile.testUart2TxRx || profile.testDrCyro;
+            anCtrlSel_t.Visible = profile.testAntenna || profile.testUart2TxRx || profile.testDrCyro;
+            //drResetBtn.Visible = profile.testDrCyro;
 
             if (profile.fwProfile != null)
             {
@@ -1288,7 +1289,7 @@ namespace ModuleTestV8
                 Thread.Sleep(20);
             }
 
-            testCounter.Text = profile.snrTestPeriod.ToString();
+            testCounter.Text = profile.GetTotalTestPeriod().ToString();
             testCounter.ForeColor = Color.Red;
             testTimer.Interval = 1000;
             testTimer.Start();
@@ -1343,6 +1344,8 @@ namespace ModuleTestV8
 
         private void startTesting_Click(object sender, EventArgs e)
         {
+            //if((Keyboard.Modifiers & ModifierKeys.Control) 
+
             rp.NewSession(SessionReport.SessionType.Testing);
 
             if ((disableTable[0] as CheckBox).Checked || (comSelTable[0] as ComboBox).SelectedIndex < 0)
@@ -1352,6 +1355,9 @@ namespace ModuleTestV8
             }
 
             bool hasWork = false;
+            TestModule.ResetTotalTestCount();
+            TestModule.ResetDrMcuStatus();
+
             for (int i = 0; i < ModuleCount; i++)
             {
                 if (!IsDeviceChecked(i))
@@ -1366,6 +1372,7 @@ namespace ModuleTestV8
 
                 if (i != 0)
                 {
+                    TestModule.IncreaseTotalTestCount();
                     hasWork = true;
                 }
 
@@ -1381,13 +1388,19 @@ namespace ModuleTestV8
                 return;
             }
 
+            if ((profile.testAntenna || profile.testDrCyro || profile.testUart2TxRx) && (anCtrlSel as ComboBox).Text == "")
+            {
+                MessageBox.Show("Please select MCU COM!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             TestModule.ClearResult();
             SetResultDisplay(resultTable[0] as Label, ResultDisplayType.Testing);
             //this.lblMsg.Text = "開始";
             bkWorker[0].RunWorkerAsync(testParam[0]);
             EnableButton(false);
             TestRunning = TestStatus.GoldenLaunched;
-            testCounter.Text = profile.snrTestPeriod.ToString();
+            testCounter.Text = profile.GetTotalTestPeriod().ToString();
             testCounter.ForeColor = Color.Green;
             TestModule.antennaEvent.Set();
         }
@@ -1400,7 +1413,6 @@ namespace ModuleTestV8
             //p.startTime = DateTime.Now;
             Stopwatch w = new Stopwatch();
             w.Start();
-
             if (p.index == 0)
             {
                 if (t.DoGolden(p))
@@ -1440,14 +1452,26 @@ namespace ModuleTestV8
                 }
                 else
                 {
-                    if (t.DoTest(p))
+                    if(p.profile.testDrCyro)
                     {
-                        e.Cancel = true;
+                        if (t.DoDrTest(p))
+                        {
+                            e.Cancel = true;
+                        }
+                    }
+                    else
+                    {
+                        if (t.DoTest(p))
+                        {
+                            e.Cancel = true;
+                        }
                     }
                 }
             }
+            t.EndProcess(p);
             p.duration = w.ElapsedMilliseconds;
             w.Stop();
+            TestModule.DecreaseTotalTestCount();
         }
 
         private void SaveReport()
@@ -1617,12 +1641,43 @@ namespace ModuleTestV8
             
             if (0 == busyCount)
             {
+                if (profile.testDrCyro)
+                {
+                    bool reset = TestModule.ResetMotoPosition((anCtrlSel as ComboBox).Text);
+                    if (!reset)
+                    {
+                        MessageBox.Show("Moto Reset fail!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
                 rp.EndSession();
                 SaveReport();
                 TestRunning = TestStatus.Finished;
-                EnableButton(true);
                 SetResultDisplay(resultTable[0] as Label, ResultDisplayType.None);
+                EnableButton(true);
+
+                if (continueMode && profile.testDrCyro)
+                {
+                    Thread.Sleep(1000);
+                    MouseClickInStartTesting();
+                }
             }
+        }
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
+        public const int MOUSEEVENTF_LEFTDOWN = 0x02;
+        public const int MOUSEEVENTF_LEFTUP = 0x04;
+        public const int MOUSEEVENTF_RIGHTDOWN = 0x08;
+        public const int MOUSEEVENTF_RIGHTUP = 0x10;
+
+        public void MouseClickInStartTesting()
+        {
+            Point sp = startTesting.PointToScreen(startTesting.Location);
+
+            int x = sp.X + 5;
+            int y = sp.Y + 5;
+            
+            mouse_event(MOUSEEVENTF_LEFTDOWN, x, y, 0, 0);
+            mouse_event(MOUSEEVENTF_LEFTUP, x, y, 0, 0);
         }
 
         private bool CheckTestBusy(bool includeGolden)
@@ -1664,7 +1719,7 @@ namespace ModuleTestV8
                 }
             }
             
-            startTesting.Enabled = true;
+            //startTesting.Enabled = true;
             TestRunning = TestStatus.Finished;
             testTimer.Stop();
             testCounter.ForeColor = Color.Blue;
@@ -1965,6 +2020,33 @@ namespace ModuleTestV8
             testTimer.Interval = 1000;
             testTimer.Start();
         }
+
+        private static int[] cheatCode = { 0x26, 0x26, 0x28, 0x28, 
+                0x25, 0x27, 0x25, 0x27, 0x42, 0x41 };
+        private int cheats = 0;
+        private bool continueMode = false;
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            const int WM_KEYDOWN = 0x100;
+            if ((msg.Msg == WM_KEYDOWN))
+            {
+                if (msg.WParam.ToInt32() == cheatCode[cheats])
+                {
+                    if (++cheats == cheatCode.Length)
+                    {   //Complete Cheat.
+                        continueMode = (continueMode) ? false : true;
+                        MessageBox.Show("Continue Mode " + ((continueMode) ? "ON" : "OFF"), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        cheats = 0;
+                    }
+                }
+                else
+                {
+                    cheats = 0;
+                }
+            }
+            return false;
+        }
+
     }
 
     public class SessionReport
