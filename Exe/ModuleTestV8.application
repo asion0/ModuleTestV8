@@ -11,7 +11,11 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+<<<<<<< HEAD
         <dsig:DigestValue>UNunmDkPv5+1xJMRVjP4jGMXME4=</dsig:DigestValue>
+=======
+        <dsig:DigestValue>jmyY1E1slqlhZaJ27cOqwKrsqnA=</dsig:DigestValue>
+>>>>>>> parent of 0817ec1... 1.0.0.46 Add module and new loader srec.
       </hash>
     </dependentAssembly>
   </dependency>
