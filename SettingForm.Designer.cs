@@ -93,6 +93,7 @@
             this.gaSnrLimit = new System.Windows.Forms.TextBox();
             this.iniFileName = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.checkRtc = new System.Windows.Forms.CheckBox();
             this.checkPromCrc = new System.Windows.Forms.CheckBox();
             this.label18 = new System.Windows.Forms.Label();
             this.dlBaudSel = new System.Windows.Forms.ComboBox();
@@ -110,6 +111,7 @@
             this.promFileName = new System.Windows.Forms.TextBox();
             this.saveAs = new System.Windows.Forms.Button();
             this.loadFrom = new System.Windows.Forms.Button();
+            this.ioTypeCombo = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -298,7 +300,7 @@
             // testClockOffset
             // 
             this.testClockOffset.AutoSize = true;
-            this.testClockOffset.Location = new System.Drawing.Point(14, 71);
+            this.testClockOffset.Location = new System.Drawing.Point(14, 92);
             this.testClockOffset.Name = "testClockOffset";
             this.testClockOffset.Size = new System.Drawing.Size(100, 16);
             this.testClockOffset.TabIndex = 3;
@@ -309,7 +311,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(29, 95);
+            this.label7.Location = new System.Drawing.Point(29, 116);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(52, 12);
             this.label7.TabIndex = 6;
@@ -318,7 +320,7 @@
             // clockOffsetThreshold
             // 
             this.clockOffsetThreshold.Enabled = false;
-            this.clockOffsetThreshold.Location = new System.Drawing.Point(92, 90);
+            this.clockOffsetThreshold.Location = new System.Drawing.Point(92, 111);
             this.clockOffsetThreshold.MaxLength = 10;
             this.clockOffsetThreshold.Name = "clockOffsetThreshold";
             this.clockOffsetThreshold.Size = new System.Drawing.Size(77, 22);
@@ -328,7 +330,7 @@
             // writeClockOffset
             // 
             this.writeClockOffset.AutoSize = true;
-            this.writeClockOffset.Location = new System.Drawing.Point(31, 120);
+            this.writeClockOffset.Location = new System.Drawing.Point(31, 140);
             this.writeClockOffset.Name = "writeClockOffset";
             this.writeClockOffset.Size = new System.Drawing.Size(157, 16);
             this.writeClockOffset.TabIndex = 5;
@@ -339,7 +341,7 @@
             // testEcompass
             // 
             this.testEcompass.AutoSize = true;
-            this.testEcompass.Location = new System.Drawing.Point(14, 262);
+            this.testEcompass.Location = new System.Drawing.Point(14, 260);
             this.testEcompass.Name = "testEcompass";
             this.testEcompass.Size = new System.Drawing.Size(94, 16);
             this.testEcompass.TabIndex = 6;
@@ -350,7 +352,7 @@
             // testMiniHommer
             // 
             this.testMiniHommer.AutoSize = true;
-            this.testMiniHommer.Location = new System.Drawing.Point(14, 287);
+            this.testMiniHommer.Location = new System.Drawing.Point(14, 284);
             this.testMiniHommer.Name = "testMiniHommer";
             this.testMiniHommer.Size = new System.Drawing.Size(155, 16);
             this.testMiniHommer.TabIndex = 7;
@@ -361,7 +363,7 @@
             // testDrCyro
             // 
             this.testDrCyro.AutoSize = true;
-            this.testDrCyro.Location = new System.Drawing.Point(14, 312);
+            this.testDrCyro.Location = new System.Drawing.Point(14, 308);
             this.testDrCyro.Name = "testDrCyro";
             this.testDrCyro.Size = new System.Drawing.Size(89, 16);
             this.testDrCyro.TabIndex = 8;
@@ -372,7 +374,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(29, 408);
+            this.label8.Location = new System.Drawing.Point(29, 406);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(46, 12);
             this.label8.TabIndex = 6;
@@ -382,7 +384,7 @@
             // testDrDuration
             // 
             this.testDrDuration.Enabled = false;
-            this.testDrDuration.Location = new System.Drawing.Point(85, 403);
+            this.testDrDuration.Location = new System.Drawing.Point(85, 401);
             this.testDrDuration.MaxLength = 4;
             this.testDrDuration.Name = "testDrDuration";
             this.testDrDuration.Size = new System.Drawing.Size(84, 22);
@@ -393,7 +395,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(37, 352);
+            this.label9.Location = new System.Drawing.Point(37, 350);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(26, 12);
             this.label9.TabIndex = 6;
@@ -402,7 +404,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(36, 378);
+            this.label10.Location = new System.Drawing.Point(36, 376);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(25, 12);
             this.label10.TabIndex = 6;
@@ -411,7 +413,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(65, 334);
+            this.label11.Location = new System.Drawing.Point(65, 332);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(53, 12);
             this.label11.TabIndex = 6;
@@ -420,7 +422,7 @@
             // uslClockWise
             // 
             this.uslClockWise.Enabled = false;
-            this.uslClockWise.Location = new System.Drawing.Point(67, 349);
+            this.uslClockWise.Location = new System.Drawing.Point(67, 347);
             this.uslClockWise.MaxLength = 10;
             this.uslClockWise.Name = "uslClockWise";
             this.uslClockWise.Size = new System.Drawing.Size(62, 22);
@@ -430,7 +432,7 @@
             // lslClockWise
             // 
             this.lslClockWise.Enabled = false;
-            this.lslClockWise.Location = new System.Drawing.Point(67, 375);
+            this.lslClockWise.Location = new System.Drawing.Point(67, 373);
             this.lslClockWise.MaxLength = 10;
             this.lslClockWise.Name = "lslClockWise";
             this.lslClockWise.Size = new System.Drawing.Size(62, 22);
@@ -440,7 +442,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(132, 334);
+            this.label13.Location = new System.Drawing.Point(132, 332);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(70, 12);
             this.label13.TabIndex = 6;
@@ -449,7 +451,7 @@
             // uslAnticlockWise
             // 
             this.uslAnticlockWise.Enabled = false;
-            this.uslAnticlockWise.Location = new System.Drawing.Point(136, 349);
+            this.uslAnticlockWise.Location = new System.Drawing.Point(136, 347);
             this.uslAnticlockWise.MaxLength = 10;
             this.uslAnticlockWise.Name = "uslAnticlockWise";
             this.uslAnticlockWise.Size = new System.Drawing.Size(62, 22);
@@ -459,7 +461,7 @@
             // lslAnticlockWise
             // 
             this.lslAnticlockWise.Enabled = false;
-            this.lslAnticlockWise.Location = new System.Drawing.Point(136, 375);
+            this.lslAnticlockWise.Location = new System.Drawing.Point(136, 373);
             this.lslAnticlockWise.MaxLength = 10;
             this.lslAnticlockWise.Name = "lslAnticlockWise";
             this.lslAnticlockWise.Size = new System.Drawing.Size(62, 22);
@@ -793,6 +795,8 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.ioTypeCombo);
+            this.groupBox4.Controls.Add(this.checkRtc);
             this.groupBox4.Controls.Add(this.checkPromCrc);
             this.groupBox4.Controls.Add(this.label18);
             this.groupBox4.Controls.Add(this.dlBaudSel);
@@ -829,10 +833,21 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Test Items";
             // 
+            // checkRtc
+            // 
+            this.checkRtc.AutoSize = true;
+            this.checkRtc.Location = new System.Drawing.Point(14, 68);
+            this.checkRtc.Name = "checkRtc";
+            this.checkRtc.Size = new System.Drawing.Size(80, 16);
+            this.checkRtc.TabIndex = 15;
+            this.checkRtc.Text = "Check RTC";
+            this.checkRtc.UseVisualStyleBackColor = true;
+            this.checkRtc.CheckedChanged += new System.EventHandler(this.testRtc_CheckedChanged);
+            // 
             // checkPromCrc
             // 
             this.checkPromCrc.AutoSize = true;
-            this.checkPromCrc.Location = new System.Drawing.Point(14, 46);
+            this.checkPromCrc.Location = new System.Drawing.Point(14, 44);
             this.checkPromCrc.Name = "checkPromCrc";
             this.checkPromCrc.Size = new System.Drawing.Size(99, 16);
             this.checkPromCrc.TabIndex = 15;
@@ -843,7 +858,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(175, 408);
+            this.label18.Location = new System.Drawing.Point(175, 406);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(49, 12);
             this.label18.TabIndex = 10;
@@ -863,7 +878,7 @@
             // testUart2TxRx
             // 
             this.testUart2TxRx.AutoSize = true;
-            this.testUart2TxRx.Location = new System.Drawing.Point(14, 208);
+            this.testUart2TxRx.Location = new System.Drawing.Point(14, 236);
             this.testUart2TxRx.Name = "testUart2TxRx";
             this.testUart2TxRx.Size = new System.Drawing.Size(161, 16);
             this.testUart2TxRx.TabIndex = 0;
@@ -874,7 +889,7 @@
             // testAntenna
             // 
             this.testAntenna.AutoSize = true;
-            this.testAntenna.Location = new System.Drawing.Point(14, 186);
+            this.testAntenna.Location = new System.Drawing.Point(14, 212);
             this.testAntenna.Name = "testAntenna";
             this.testAntenna.Size = new System.Drawing.Size(117, 16);
             this.testAntenna.TabIndex = 0;
@@ -885,18 +900,18 @@
             // testIo
             // 
             this.testIo.AutoSize = true;
-            this.testIo.Location = new System.Drawing.Point(14, 164);
+            this.testIo.Location = new System.Drawing.Point(14, 188);
             this.testIo.Name = "testIo";
-            this.testIo.Size = new System.Drawing.Size(160, 16);
+            this.testIo.Size = new System.Drawing.Size(58, 16);
             this.testIo.TabIndex = 0;
-            this.testIo.Text = "Test IO (For NavSpark Only)";
+            this.testIo.Text = "Test IO";
             this.testIo.UseVisualStyleBackColor = true;
             this.testIo.CheckedChanged += new System.EventHandler(this.testIo_CheckedChanged);
             // 
             // writeTag
             // 
             this.writeTag.AutoSize = true;
-            this.writeTag.Location = new System.Drawing.Point(14, 142);
+            this.writeTag.Location = new System.Drawing.Point(14, 164);
             this.writeTag.Name = "writeTag";
             this.writeTag.Size = new System.Drawing.Size(67, 16);
             this.writeTag.TabIndex = 0;
@@ -908,7 +923,7 @@
             // enableDownload
             // 
             this.enableDownload.AutoSize = true;
-            this.enableDownload.Location = new System.Drawing.Point(14, 21);
+            this.enableDownload.Location = new System.Drawing.Point(14, 20);
             this.enableDownload.Name = "enableDownload";
             this.enableDownload.Size = new System.Drawing.Size(169, 16);
             this.enableDownload.TabIndex = 1;
@@ -919,7 +934,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(175, 95);
+            this.label17.Location = new System.Drawing.Point(175, 116);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(26, 12);
             this.label17.TabIndex = 6;
@@ -928,7 +943,7 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(29, 432);
+            this.label19.Location = new System.Drawing.Point(29, 430);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(92, 12);
             this.label19.TabIndex = 6;
@@ -938,7 +953,7 @@
             // thresholdCogWise
             // 
             this.thresholdCogWise.Enabled = false;
-            this.thresholdCogWise.Location = new System.Drawing.Point(132, 429);
+            this.thresholdCogWise.Location = new System.Drawing.Point(132, 427);
             this.thresholdCogWise.MaxLength = 10;
             this.thresholdCogWise.Name = "thresholdCogWise";
             this.thresholdCogWise.Size = new System.Drawing.Size(84, 22);
@@ -1007,6 +1022,19 @@
             this.loadFrom.Text = "Load From...";
             this.loadFrom.UseVisualStyleBackColor = true;
             this.loadFrom.Click += new System.EventHandler(this.loadFrom_Click);
+            // 
+            // ioTypeCombo
+            // 
+            this.ioTypeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ioTypeCombo.FormattingEnabled = true;
+            this.ioTypeCombo.Items.AddRange(new object[] {
+            "NavSpark",
+            "NavSpark Mini"});
+            this.ioTypeCombo.Location = new System.Drawing.Point(77, 186);
+            this.ioTypeCombo.Name = "ioTypeCombo";
+            this.ioTypeCombo.Size = new System.Drawing.Size(121, 20);
+            this.ioTypeCombo.TabIndex = 16;
+            this.ioTypeCombo.SelectedIndexChanged += new System.EventHandler(this.ioTypeChk_SelectedIndexChanged);
             // 
             // SettingForm
             // 
@@ -1132,5 +1160,7 @@
         private System.Windows.Forms.CheckBox testIo;
         private System.Windows.Forms.CheckBox testAntenna;
         private System.Windows.Forms.CheckBox testUart2TxRx;
+        private System.Windows.Forms.CheckBox checkRtc;
+        private System.Windows.Forms.ComboBox ioTypeCombo;
     }
 }

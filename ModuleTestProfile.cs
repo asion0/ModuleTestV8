@@ -94,8 +94,14 @@ namespace ModuleTestV8
         public int bdSnrLimit { get; set; }
         public int gaSnrLimit { get; set; }
         //Testing
+        public enum IoType
+        {
+            NavSpark,
+            NavSparkMini
+        }
         public bool writeTag { get; set; }
         public bool testIo { get; set; }
+        public IoType testIoType { get; set; }
         public bool testAntenna { get; set; }
         public bool testUart2TxRx { get; set; }
         public bool enableDownload { get; set; }
@@ -103,6 +109,7 @@ namespace ModuleTestV8
 
         //public bool testBootStatus { get; set; }
         public bool checkPromCrc { get; set; }
+        public bool checkRtc { get; set; }
         public bool testClockOffset { get; set; }
         public double clockOffsetThreshold { get; set; }
         public bool writeClockOffset { get; set; }
@@ -389,6 +396,7 @@ namespace ModuleTestV8
             gaSnrLimit = r.gaSnrLimit;
             writeTag = r.writeTag;
             testIo = r.testIo;
+            testIoType = r.testIoType;
             testAntenna = r.testAntenna;
             testUart2TxRx = r.testUart2TxRx;
             iniFileName = r.iniFileName;
@@ -399,6 +407,7 @@ namespace ModuleTestV8
             //testPromCrc = r.testPromCrc;
             //promCrc = r.promCrc;
             checkPromCrc = r.checkPromCrc;
+            checkRtc = r.checkRtc;
             testClockOffset = r.testClockOffset;
             clockOffsetThreshold = r.clockOffsetThreshold;
             writeClockOffset = r.writeClockOffset;
@@ -556,6 +565,8 @@ namespace ModuleTestV8
             dlBaudSel = Convert.ToInt32(temp.ToString());
             GetPrivateProfileString("Testing", "Test_Io", "False", temp, MaxReadLength, path);
             testIo = Convert.ToBoolean(temp.ToString());
+            GetPrivateProfileString("Testing", "Test_Io_Type", "0", temp, MaxReadLength, path);
+            testIoType = (IoType)Convert.ToInt32(temp.ToString());
             GetPrivateProfileString("Testing", "Test_Antenna_Detect", "False", temp, MaxReadLength, path);
             testAntenna = Convert.ToBoolean(temp.ToString());
             GetPrivateProfileString("Testing", "Test_UART2_TXRX", "False", temp, MaxReadLength, path);
@@ -563,6 +574,8 @@ namespace ModuleTestV8
 
             GetPrivateProfileString("Testing", "Check_Prom_Crc", "False", temp, MaxReadLength, path);
             checkPromCrc = Convert.ToBoolean(temp.ToString());
+            GetPrivateProfileString("Testing", "Check_Rtc", "True", temp, MaxReadLength, path);
+            checkRtc = Convert.ToBoolean(temp.ToString());
             GetPrivateProfileString("Testing", "Test_Colok_Offset", "False", temp, MaxReadLength, path);
             testClockOffset = Convert.ToBoolean(temp.ToString());
             GetPrivateProfileString("Testing", "Clock_Offset_Threshold", InitClockOffsetThreshold.ToString(), temp, MaxReadLength, path);
@@ -641,12 +654,14 @@ namespace ModuleTestV8
 
             WritePrivateProfileString("Testing", "Write_Tag", writeTag.ToString(), path);
             WritePrivateProfileString("Testing", "Test_Io", testIo.ToString(), path);
+            WritePrivateProfileString("Testing", "Test_Io_Type", ((int)testIoType).ToString(), path);
             WritePrivateProfileString("Testing", "Test_Antenna_Detect", testAntenna.ToString(), path);
             WritePrivateProfileString("Testing", "Test_UART2_TXRX", testUart2TxRx.ToString(), path); 
             WritePrivateProfileString("Testing", "Enable_Download", enableDownload.ToString(), path);
             WritePrivateProfileString("Testing", "Download_Baud_Rate", dlBaudSel.ToString(), path);
             //WritePrivateProfileString("Testing", "Test_Flash_Boot", testBootStatus.ToString(), path);
             WritePrivateProfileString("Testing", "Check_Prom_Crc", checkPromCrc.ToString(), path);
+            WritePrivateProfileString("Testing", "Check_Rtc", checkPromCrc.ToString(), path);
             WritePrivateProfileString("Testing", "Test_Colok_Offset", testClockOffset.ToString(), path);
             WritePrivateProfileString("Testing", "Clock_Offset_Threshold", clockOffsetThreshold.ToString(), path);
             WritePrivateProfileString("Testing", "Write_Clock_Offset", writeClockOffset.ToString(), path);
@@ -693,12 +708,14 @@ namespace ModuleTestV8
             itemData.SetAttribute("GAS", gaSnrLimit.ToString());
             itemData.SetAttribute("WT", writeTag.ToString());
             itemData.SetAttribute("TI", testIo.ToString());
+            itemData.SetAttribute("TIT", ((int)testIoType).ToString());
             itemData.SetAttribute("AD", testAntenna.ToString());
             itemData.SetAttribute("U2T", testUart2TxRx.ToString());
 
             itemData.SetAttribute("ED", enableDownload.ToString());
             itemData.SetAttribute("DB", dlBaudSel.ToString());
             itemData.SetAttribute("CPC", checkPromCrc.ToString());
+            itemData.SetAttribute("CRT", checkRtc.ToString());
             itemData.SetAttribute("TCO", testClockOffset.ToString());
             itemData.SetAttribute("COT", clockOffsetThreshold.ToString());
             itemData.SetAttribute("WCO", writeClockOffset.ToString());

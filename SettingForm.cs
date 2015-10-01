@@ -166,6 +166,9 @@ namespace ModuleTestV8
 
             writeTag.Checked = profile.writeTag;
             testIo.Checked = profile.testIo;
+            ioTypeCombo.SelectedIndex = (int)profile.testIoType;
+            ioTypeCombo.Enabled = profile.testIo;
+
             testAntenna.Checked = profile.testAntenna;
             testUart2TxRx.Checked = profile.testUart2TxRx;
             iniFileName.Text = profile.iniFileName;
@@ -178,6 +181,7 @@ namespace ModuleTestV8
             //testPromCrc.Checked = profile.testPromCrc;
             //promCrc.Text = profile.promCrc.ToString("X");
             checkPromCrc.Checked = profile.checkPromCrc;
+            checkRtc.Checked = profile.checkRtc;
             testClockOffset.Checked = profile.testClockOffset;
             clockOffsetThreshold.Text = profile.clockOffsetThreshold.ToString();
             writeClockOffset.Checked = profile.writeClockOffset;
@@ -409,6 +413,7 @@ namespace ModuleTestV8
         private void testIo_CheckedChanged(object sender, EventArgs e)
         {
             profile.testIo = (sender as CheckBox).Checked;
+            ioTypeCombo.Enabled = profile.testIo;
         }
 
         private void testAntenna_CheckedChanged(object sender, EventArgs e)
@@ -475,11 +480,6 @@ namespace ModuleTestV8
         private void testBootStatus_CheckedChanged(object sender, EventArgs e)
         {
             //profile.testBootStatus = (sender as CheckBox).Checked;
-        }
-
-        private void testPromCrc_CheckedChanged(object sender, EventArgs e)
-        {
-            profile.checkPromCrc = (sender as CheckBox).Checked;
         }
 
         private void testClockOffset_CheckedChanged(object sender, EventArgs e)
@@ -778,5 +778,22 @@ namespace ModuleTestV8
         {
             profile.checkPromCrc = (sender as CheckBox).Checked;
         }
+
+        private void testPromCrc_CheckedChanged(object sender, EventArgs e)
+        {
+            profile.checkPromCrc = (sender as CheckBox).Checked;
+        }
+
+        private void testRtc_CheckedChanged(object sender, EventArgs e)
+        {
+            profile.checkRtc = (sender as CheckBox).Checked;
+        }
+
+        private void ioTypeChk_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            profile.testIoType = (ModuleTestProfile.IoType)(sender as ComboBox).SelectedIndex;
+        }
+
+    
     }
 }

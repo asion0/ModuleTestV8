@@ -131,6 +131,9 @@
     <value>..\Srec\iCacheTester.srec;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;big5</value>
   </data>
   <data name="NavSparkIoTester" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Srec\NavSparkIoTester.srec;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;big5</value>
+    <value>..\Srec\NavSparkIoTester.srec;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="IoTesterSrec" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Srec\ioTest.sre;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

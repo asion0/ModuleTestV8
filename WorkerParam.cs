@@ -70,11 +70,14 @@ namespace ModuleTestV8
             OdoPluseFail = 1UL << 50,
             OdoDirectionFail = 1UL << 51,
             GyroFail = 1UL << 52,
+            TestLoaderDownloadFail = 1UL << 53,
+            TestUploadLoaderFail = 1UL << 54,
+            TestIoTestFail = 1UL << 55,
 
-            TestErr10 = 1UL << 53,
+            TestErr10 = 1UL << 64,
         }
 
-        public const int ErrorCount = 53;
+        public const int ErrorCount = 55;
         public static String GetErrorString(ErrorType er)
         {
             if (ErrorType.NoError == er)

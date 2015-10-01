@@ -545,6 +545,223 @@ namespace ModuleTestV8
             return true;
         }
 
+        private bool TestNavSparkIo(WorkerParam p, WorkerReportParam r)
+        {
+            Thread.Sleep(1200);
+            GPS_RESPONSE rep = p.gps.ChangeBaudrate((byte)5, 2);
+            if (GPS_RESPONSE.ACK != rep)
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowError;
+                p.error = WorkerParam.ErrorType.ChangeBaudRateFail;
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                return false;
+            }
+            else
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                r.output = "Change baud rate success";
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+            }
+
+            String dbgOutput = "";
+            rep = p.gps.SendLoaderDownload(ref dbgOutput);
+            if (GPS_RESPONSE.OK != rep)
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowError;
+                p.error = WorkerParam.ErrorType.LoaderDownloadFail;
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                return false;
+            }
+            else
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                r.output = "Loader Download success";
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+
+                rep = p.gps.UploadLoader(Properties.Resources.NavSparkIoTester);
+                if (GPS_RESPONSE.OK != rep)
+                {
+                    r.reportType = WorkerReportParam.ReportType.ShowError;
+                    p.error = WorkerParam.ErrorType.UploadLoaderFail;
+                    p.bw.ReportProgress(0, new WorkerReportParam(r));
+                    return false;
+                }
+
+                r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                r.output = "Upload Loader success";
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                Thread.Sleep(1000);
+            }
+
+            System.Diagnostics.Stopwatch w = new System.Diagnostics.Stopwatch();
+            w.Reset();
+            w.Start();
+
+            bool ioTestPass = false;
+            uint adc = 0;
+            while (w.ElapsedMilliseconds < 5000)
+            {
+                byte[] buff = new byte[256];
+                int l = p.gps.ReadLineNoWait(buff, 256, 2000);
+                string line = Encoding.UTF8.GetString(buff, 0, l);
+
+                if (line.Length > 0)
+                {
+                    r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                    r.output = line;
+                    p.bw.ReportProgress(0, new WorkerReportParam(r));
+                }
+                if (line.Contains("FINISH"))
+                {
+                    ioTestPass = true;
+                    break;
+                }
+                if (line.Contains("FAIL"))
+                {
+                    break;
+                }
+                if (line.Contains("ADC:"))
+                {
+                    uint a = Convert.ToUInt32(line.Split(' ')[2], 16);
+                    if (CheckAdc(a))
+                    {
+                        adc = a;
+                    }
+                }
+            };
+
+            if (ioTestPass)
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                r.output = "Test IO success";
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+            }
+            else
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowError;
+                p.error = WorkerParam.ErrorType.TestIoFail;
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                return false;
+            }
+
+            if (CheckAdc(adc))
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                r.output = "Test ADC success";
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+            }
+            else
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowError;
+                p.error = WorkerParam.ErrorType.TestAdcFail;
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                return false;
+            }
+            return true;
+        }
+
+        private bool TestNavSparkMiniIo(WorkerParam p, WorkerReportParam r)
+        {
+            //TEST01 = Flag IoCount io1 io2 io3 io4 ......
+            //Flag - bit wise for test function : 0 - IO Test, 1 - GSN MAG Test, 2 - Rtc Test
+            //IoCount - Test IO pair count
+            //io1, io2... - High byte - gpio pin from, Low byte gpio pin to.
+            return DoIoSrecTest(p, r, Properties.Resources.IoTesterSrec, "TEST01 = 0001 0004 0304 0305 1E1F 1C1D ", 5000);
+            //     DoIoSrecTest(p, r, Properties.Resources.IoTesterSrec, "TEST01 = 0001 000F 0119 1C1D 0C0D 0E16 0809 151B 100F 1406 0002 181A 1807 0B0A 0B17 031E 031F ", 5000))
+       }
+
+        private bool DoIoSrecTest(WorkerParam p, WorkerReportParam r, string testSrec, string srecCmd, int timeout)
+        {
+            String dbgOutput = "";
+            GPS_RESPONSE rep = p.gps.SendLoaderDownload(ref dbgOutput);
+            if (dbgOutput != "")
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                r.output = dbgOutput;
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+            }
+            if (GPS_RESPONSE.OK != rep)
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowError;
+                p.error = WorkerParam.ErrorType.TestLoaderDownloadFail;
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                return false;
+            }
+            else
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                r.output = "Loader Download success";
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+
+                rep = p.gps.UploadLoader(testSrec);
+                if (GPS_RESPONSE.OK != rep)
+                {
+                    r.reportType = WorkerReportParam.ReportType.ShowError;
+                    p.error = WorkerParam.ErrorType.TestUploadLoaderFail;
+                    p.bw.ReportProgress(0, new WorkerReportParam(r));
+                    return false;
+                }
+
+                r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                r.output = "Upload Loader success";
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                Thread.Sleep(1000);
+            }
+            //TEST01 = Flag IoCount io1 io2 io3 io4 ......
+            //Flag - bit wise for test function : 0 - IO Test, 1 - GSN MAG Test, 2 - Rtc Test
+            //IoCount - Test IO pair count
+            //io1, io2... - High byte - gpio pin from, Low byte gpio pin to.
+            if (srecCmd.Length > 0)
+            {
+                rep = p.gps.SendTestSrecCmd(srecCmd, 1000);
+            }
+            System.Diagnostics.Stopwatch w = new System.Diagnostics.Stopwatch();
+            w.Reset();
+            w.Start();
+
+            bool ioTestPass = true;
+            bool ioTestFinished = false;
+            while (w.ElapsedMilliseconds < timeout)
+            {
+                byte[] buff = new byte[256];
+                int l = p.gps.ReadLineNoWait(buff, 256, 2000);
+                string line = Encoding.UTF8.GetString(buff, 0, l);
+
+                if (line.Length > 0)
+                {
+                    r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                    r.output = line;
+                    p.bw.ReportProgress(0, new WorkerReportParam(r));
+                }
+                if (line.Contains("FINISH"))
+                {
+                    ioTestFinished = true;
+                    break;
+                }
+                if (line.Contains("FAIL"))
+                {
+                    ioTestPass = false;
+                    break;
+                }
+            };
+
+            if (!ioTestFinished || !ioTestPass)
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowError;
+                p.error = WorkerParam.ErrorType.TestIoTestFail;
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                return false;
+            }
+            else
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                r.output = "IO Test pass";
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+            }
+
+            return true;
+        }
+
         private bool DoQueryCrc(WorkerParam p, WorkerReportParam r)
         {
             uint crc = 0;
@@ -733,9 +950,23 @@ namespace ModuleTestV8
                     p.error |= WorkerParam.ErrorType.BeidouSnrError;
                 }
                 p.bw.ReportProgress(0, new WorkerReportParam(r));
-                //EndProcess(p);
                 return false;
-            }      
+            }
+
+            rep = p.gps.ConfigMessageOutput(0x00);
+            if (GPS_RESPONSE.ACK != rep)
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                p.error = (rep == GPS_RESPONSE.NACK) ? WorkerParam.ErrorType.ConfigNmeaOutputNack : WorkerParam.ErrorType.ConfigNmeaOutputTimeOut;
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                return false;
+            }
+            else
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowProgress;
+                r.output = "Turn off NMEA output success";
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+            }
             return true;
         }
 
@@ -786,7 +1017,7 @@ namespace ModuleTestV8
                 return false;
             }
 
-            if (!TestRtc(p, r))
+            if (p.profile.checkRtc && !TestRtc(p, r))
             {
                 return false;
             }
@@ -1097,11 +1328,11 @@ namespace ModuleTestV8
                     return false;
                 }
                 EndAntennaProcess(annIO);
-           
             }
 
             if ((p.profile.testGpSnr || p.profile.testGlSnr || p.profile.testBdSnr) && !TestSnr(p, r))
             {
+                EndProcess(p);
                 return false;
             }
 
@@ -1219,119 +1450,20 @@ namespace ModuleTestV8
 
             if (p.profile.testIo)
             {
-                Thread.Sleep(1200);
-                rep = p.gps.ChangeBaudrate((byte)5, 2);
-                if (GPS_RESPONSE.ACK != rep)
+                switch (p.profile.testIoType)
                 {
-                    r.reportType = WorkerReportParam.ReportType.ShowError;
-                    p.error = WorkerParam.ErrorType.ChangeBaudRateFail;
-                    p.bw.ReportProgress(0, new WorkerReportParam(r));
-                    EndProcess(p);
-                    return false;
-                }
-                else
-                {
-                    r.reportType = WorkerReportParam.ReportType.ShowProgress;
-                    r.output = "Change baud rate success";
-                    p.bw.ReportProgress(0, new WorkerReportParam(r));
-                }
-                String dbgOutput = "";
-                rep = p.gps.SendLoaderDownload(ref dbgOutput);
-                if (GPS_RESPONSE.OK != rep)
-                {
-                    r.reportType = WorkerReportParam.ReportType.ShowError;
-                    p.error = WorkerParam.ErrorType.LoaderDownloadFail;
-                    p.bw.ReportProgress(0, new WorkerReportParam(r));
-                    EndProcess(p);
-                    return false;
-                }
-                else
-                {
-                    r.reportType = WorkerReportParam.ReportType.ShowProgress;
-                    r.output = "Loader Download success";
-                    p.bw.ReportProgress(0, new WorkerReportParam(r));
-
-                    rep = p.gps.UploadLoader(Properties.Resources.NavSparkIoTester);
-                    if (GPS_RESPONSE.OK != rep)
-                    {
-                        r.reportType = WorkerReportParam.ReportType.ShowError;
-                        p.error = WorkerParam.ErrorType.UploadLoaderFail;
-                        p.bw.ReportProgress(0, new WorkerReportParam(r));
-                        EndProcess(p);
-                        return false;
-                    }
-
-                    r.reportType = WorkerReportParam.ReportType.ShowProgress;
-                    r.output = "Upload Loader success";
-                    p.bw.ReportProgress(0, new WorkerReportParam(r));
-                    Thread.Sleep(1000);
-                }
-
-                System.Diagnostics.Stopwatch w = new System.Diagnostics.Stopwatch();
-                w.Reset();
-                w.Start();
-
-                bool ioTestPass = false;
-                uint adc = 0;
-                while (w.ElapsedMilliseconds < 5000)
-                {
-                    byte[] buff = new byte[256];
-                    int l = p.gps.ReadLineNoWait(buff, 256, 2000);
-                    string line = Encoding.UTF8.GetString(buff, 0, l);
-
-                    if (line.Length > 0)
-                    {
-                        r.reportType = WorkerReportParam.ReportType.ShowProgress;
-                        r.output = line;
-                        p.bw.ReportProgress(0, new WorkerReportParam(r));
-                    }
-                    if (line.Contains("FINISH"))
-                    {
-                        ioTestPass = true;
-                        break;
-                    }
-                    if (line.Contains("FAIL"))
-                    {
-                        break;
-                    }
-                    if (line.Contains("ADC:"))
-                    {
-                        uint a = Convert.ToUInt32(line.Split(' ')[2], 16);
-                        if (CheckAdc(a))
+                    case ModuleTestProfile.IoType.NavSpark:
+                        if (!TestNavSparkIo(p, r))
                         {
-                            adc = a;
+                            return false;
                         }
-                    }
-                };
-
-                if (ioTestPass)
-                {
-                    r.reportType = WorkerReportParam.ReportType.ShowProgress;
-                    r.output = "Test IO success";
-                    p.bw.ReportProgress(0, new WorkerReportParam(r));
-                }
-                else
-                {
-                    r.reportType = WorkerReportParam.ReportType.ShowError;
-                    p.error = WorkerParam.ErrorType.TestIoFail;
-                    p.bw.ReportProgress(0, new WorkerReportParam(r));
-                    EndProcess(p);
-                    return false;
-                }
-
-                if(CheckAdc(adc))
-                {
-                    r.reportType = WorkerReportParam.ReportType.ShowProgress;
-                    r.output = "Test ADC success";
-                    p.bw.ReportProgress(0, new WorkerReportParam(r));                
-                }
-                else
-                {
-                    r.reportType = WorkerReportParam.ReportType.ShowError;
-                    p.error = WorkerParam.ErrorType.TestAdcFail;
-                    p.bw.ReportProgress(0, new WorkerReportParam(r));
-                    EndProcess(p);
-                    return false;
+                        break;
+                    case ModuleTestProfile.IoType.NavSparkMini:
+                        if (!TestNavSparkMiniIo(p, r))
+                        {
+                            return false;
+                        }
+                        break;
                 }
             }
 
@@ -1581,7 +1713,7 @@ namespace ModuleTestV8
                 return false;
             }
 
-            if (!TestRtc(p, r))
+            if (p.profile.checkRtc && !TestRtc(p, r))
             {
                 return false;
             }

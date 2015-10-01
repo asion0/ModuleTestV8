@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ModuleTestV8")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright ©2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 下列 GUID 為專案公開 (Expose) 至 COM 時所要使用的 typelib ID
-[assembly: Guid("28386710-c315-42f3-9c0d-64c536f084f9")]
+[assembly: Guid("28386711-c315-42f3-9c0d-64c536f084f9")]
 
 // 組件的版本資訊是由下列四項值構成:
 //
@@ -32,10 +32,14 @@ using System.Runtime.InteropServices;
 // 您可以指定所有的值，也可以依照以下的方式，使用 '*' 將組建和修訂編號
 // 指定為預設值:
 // [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.50")]
+[assembly: AssemblyFileVersion("1.0.0.50")]
 
-[assembly: AssemblyVersion("1.0.0.45")]
-[assembly: AssemblyFileVersion("1.0.0.45")]
-
+// 1.0.0.50 - 20151001 Turn off NMEA output after SNR test to avoid response too slow in 4800 bps .
+// 1.0.0.49 - Support NavSpark-mini test.
+// 1.0.0.48 - DR Module Test flow change. 20150709.
+// 1.0.0.47 - Add DR Module Test support. 20150625.
+// 1.0.0.46 - Support Winbond new flash and add new module name.
 // 1.0.0.45 - Fix report convert issue when continuous conversion.
 // 1.0.0.43 - Add write protected in download loader.
 // 1.0.0.42 - Add FactoryReset after download finished for flash ic write protected.
