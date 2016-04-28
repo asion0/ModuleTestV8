@@ -73,6 +73,7 @@ namespace ModuleTestV8
             TestLoaderDownloadFail = 1UL << 53,
             TestUploadLoaderFail = 1UL << 54,
             TestIoTestFail = 1UL << 55,
+            DrSensorFail = 1UL << 56,
 
             TestErr10 = 1UL << 64,
         }

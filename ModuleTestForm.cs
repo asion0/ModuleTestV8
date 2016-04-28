@@ -1045,6 +1045,7 @@ namespace ModuleTestV8
 
             anCtrlSel.Visible = profile.testAntenna || profile.testUart2TxRx || profile.testDrCyro;
             anCtrlSel_t.Visible = profile.testAntenna || profile.testUart2TxRx || profile.testDrCyro;
+
             //drResetBtn.Visible = profile.testDrCyro;
 
             if (profile.fwProfile != null)
@@ -1641,7 +1642,7 @@ namespace ModuleTestV8
             
             if (0 == busyCount)
             {
-                if (profile.testDrCyro)
+                if (profile.testDrCyro && profile.useSensor)
                 {
                     bool reset = TestModule.ResetMotoPosition((anCtrlSel as ComboBox).Text);
                     if (!reset)

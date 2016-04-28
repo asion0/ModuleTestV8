@@ -44,6 +44,13 @@ Error 42 : NmeaDelayDetectError
 Error 43 : TestIcacheTimeout
 Error 44 : TestIoFail
 Error 45 : TestAdcFail
-Error 46 : AntennaIoFail
+Error 46 : IoControllerFail
 Error 47 : TestAntennaFail
-Error 48 : TestErr10
+Error 48 : TestUART2Fail
+Error 49 : McuFail
+Error 50 : OdoPluseFail
+Error 51 : OdoDirectionFail
+Error 52 : GyroFail
+Error 53 : TestLoaderDownloadFail
+Error 54 : TestUploadLoaderFail
+Error 55 : TestIoTestFail

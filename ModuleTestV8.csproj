@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{06DB3083-4AAC-4032-B2BA-494FADC48EAD}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -58,7 +58,10 @@
     <Reference Include="Microsoft.Office.Interop.Excel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite, Version=1.0.66.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86" />
+    <Reference Include="System.Data.SQLite, Version=1.0.58.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\My Programs\SQLite-1.0.58.0-binaries\bin\System.Data.SQLite.DLL</HintPath>
+    </Reference>
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -112,31 +115,23 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ModuleTestForm.resx">
       <DependentUpon>ModuleTestForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="LanguagePack.en.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <EmbeddedResource Include="LanguagePack.en.resx" />
     <EmbeddedResource Include="LanguagePack.zh-TW.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LanguagePack.zh-TW.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="LogSelectForm.resx">
       <DependentUpon>LogSelectForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Options.resx">
       <DependentUpon>Options.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Password.resx">
       <DependentUpon>Password.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -145,15 +140,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ResetTesterLogin.resx">
       <DependentUpon>ResetTesterLogin.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingForm.resx">
       <DependentUpon>SettingForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WaitingGoldenForm.resx">
       <DependentUpon>WaitingGoldenForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -161,7 +153,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
-    <None Include="ModuleTestV8_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -228,11 +219,7 @@
     <Content Include="Icons\ModuleTest.ico" />
     <Content Include="Icons\ResetTester.ico" />
     <None Include="Srec\iCacheTester.srec" />
-    <None Include="Srec\ioTest.sre" />
     <None Include="Srec\NavSparkIoTester.srec" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />

@@ -188,6 +188,7 @@ namespace ModuleTestV8
             testEcompass.Checked = profile.testEcompass;
             testMiniHommer.Checked = profile.testMiniHommer;
             testDrCyro.Checked = profile.testDrCyro;
+            useSensor.Checked = profile.useSensor;
             testDrDuration.Text = profile.testDrDuration.ToString();
             uslClockWise.Text = profile.uslClockWise.ToString();
             uslAnticlockWise.Text = profile.uslAnticlockWise.ToString();
@@ -533,6 +534,7 @@ namespace ModuleTestV8
             lslClockWise.Enabled = (sender as CheckBox).Checked;
             lslAnticlockWise.Enabled = (sender as CheckBox).Checked;
             thresholdCogWise.Enabled = (sender as CheckBox).Checked;
+            useSensor.Enabled = (sender as CheckBox).Checked;
         }
 
         private void testDrDuration_TextChanged(object sender, EventArgs e)
@@ -729,11 +731,6 @@ namespace ModuleTestV8
             AdjustUIByProfile();
         }
 
-        //private void gpSnrUppler_TextChanged(object sender, EventArgs e)
-        //{
-        //    profile.gpSnrLimit = GetTextBoxPositiveInt(sender as TextBox);
-        //}
-
         private void gpSnrLower_TextChanged(object sender, EventArgs e)
         {
             profile.gpSnrLower = GetTextBoxSnrInt(sender as TextBox);
@@ -794,6 +791,9 @@ namespace ModuleTestV8
             profile.testIoType = (ModuleTestProfile.IoType)(sender as ComboBox).SelectedIndex;
         }
 
-    
+        private void useSensor_CheckedChanged(object sender, EventArgs e)
+        {
+            profile.useSensor = (sender as CheckBox).Checked;
+        }
     }
 }

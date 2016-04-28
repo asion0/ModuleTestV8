@@ -116,6 +116,7 @@ namespace ModuleTestV8
         public bool testEcompass { get; set; }
         public bool testMiniHommer { get; set; }
         public bool testDrCyro { get; set; }
+        public bool useSensor { get; set; }
         public int testDrDuration { get; set; }
         public double uslClockWise { get; set; }
         public double uslAnticlockWise { get; set; }
@@ -414,6 +415,7 @@ namespace ModuleTestV8
             testEcompass = r.testEcompass;
             testMiniHommer = r.testMiniHommer;
             testDrCyro = r.testDrCyro;
+            useSensor = r.useSensor;
             testDrDuration = r.testDrDuration;
             uslClockWise = r.uslClockWise;
             uslAnticlockWise = r.uslAnticlockWise;
@@ -588,6 +590,8 @@ namespace ModuleTestV8
             testMiniHommer = Convert.ToBoolean(temp.ToString());
             GetPrivateProfileString("Testing", "Test_DR_Cyro", "False", temp, MaxReadLength, path);
             testDrCyro = Convert.ToBoolean(temp.ToString());
+            GetPrivateProfileString("Testing", "Use_Sensor", "True", temp, MaxReadLength, path);
+            useSensor = Convert.ToBoolean(temp.ToString());
             GetPrivateProfileString("Testing", "Test_DR_Duration", InitDrDuration.ToString(), temp, MaxReadLength, path);
             testDrDuration = Convert.ToInt32(temp.ToString());
             GetPrivateProfileString("Testing", "USL_Clockwise", "0", temp, MaxReadLength, path);
@@ -661,13 +665,14 @@ namespace ModuleTestV8
             WritePrivateProfileString("Testing", "Download_Baud_Rate", dlBaudSel.ToString(), path);
             //WritePrivateProfileString("Testing", "Test_Flash_Boot", testBootStatus.ToString(), path);
             WritePrivateProfileString("Testing", "Check_Prom_Crc", checkPromCrc.ToString(), path);
-            WritePrivateProfileString("Testing", "Check_Rtc", checkPromCrc.ToString(), path);
+            WritePrivateProfileString("Testing", "Check_Rtc", checkRtc.ToString(), path);
             WritePrivateProfileString("Testing", "Test_Colok_Offset", testClockOffset.ToString(), path);
             WritePrivateProfileString("Testing", "Clock_Offset_Threshold", clockOffsetThreshold.ToString(), path);
             WritePrivateProfileString("Testing", "Write_Clock_Offset", writeClockOffset.ToString(), path);
             WritePrivateProfileString("Testing", "Test_E_Compass", testEcompass.ToString(), path);
             WritePrivateProfileString("Testing", "Test_miniHommer", testMiniHommer.ToString(), path);
             WritePrivateProfileString("Testing", "Test_DR_Cyro", testDrCyro.ToString(), path);
+            WritePrivateProfileString("Testing", "Use_Sensor", useSensor.ToString(), path);
             WritePrivateProfileString("Testing", "Test_DR_Duration", testDrDuration.ToString(), path);
             WritePrivateProfileString("Testing", "USL_Clockwise", uslClockWise.ToString(), path);
             WritePrivateProfileString("Testing", "USL_Anticlockwise", uslAnticlockWise.ToString(), path);
@@ -722,6 +727,7 @@ namespace ModuleTestV8
             itemData.SetAttribute("TEC", testEcompass.ToString());
             itemData.SetAttribute("TMH", testMiniHommer.ToString());
             itemData.SetAttribute("TDC", testDrCyro.ToString());
+            itemData.SetAttribute("DUS", useSensor.ToString());
             itemData.SetAttribute("TDD", testDrDuration.ToString());
             itemData.SetAttribute("USC", uslClockWise.ToString());
             itemData.SetAttribute("USA", uslAnticlockWise.ToString());

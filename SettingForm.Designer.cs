@@ -93,6 +93,7 @@
             this.gaSnrLimit = new System.Windows.Forms.TextBox();
             this.iniFileName = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.ioTypeCombo = new System.Windows.Forms.ComboBox();
             this.checkRtc = new System.Windows.Forms.CheckBox();
             this.checkPromCrc = new System.Windows.Forms.CheckBox();
             this.label18 = new System.Windows.Forms.Label();
@@ -104,6 +105,7 @@
             this.enableDownload = new System.Windows.Forms.CheckBox();
             this.label17 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
+            this.useSensor = new System.Windows.Forms.CheckBox();
             this.thresholdCogWise = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.browseFw = new System.Windows.Forms.Button();
@@ -111,7 +113,6 @@
             this.promFileName = new System.Windows.Forms.TextBox();
             this.saveAs = new System.Windows.Forms.Button();
             this.loadFrom = new System.Windows.Forms.Button();
-            this.ioTypeCombo = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -367,7 +368,7 @@
             this.testDrCyro.Name = "testDrCyro";
             this.testDrCyro.Size = new System.Drawing.Size(89, 16);
             this.testDrCyro.TabIndex = 8;
-            this.testDrCyro.Text = "Test DR Cyro";
+            this.testDrCyro.Text = "Test DR Gyro";
             this.testDrCyro.UseVisualStyleBackColor = true;
             this.testDrCyro.CheckedChanged += new System.EventHandler(this.testDrCyro_CheckedChanged);
             // 
@@ -813,6 +814,7 @@
             this.groupBox4.Controls.Add(this.label9);
             this.groupBox4.Controls.Add(this.writeClockOffset);
             this.groupBox4.Controls.Add(this.label10);
+            this.groupBox4.Controls.Add(this.useSensor);
             this.groupBox4.Controls.Add(this.testDrCyro);
             this.groupBox4.Controls.Add(this.label11);
             this.groupBox4.Controls.Add(this.testMiniHommer);
@@ -832,6 +834,19 @@
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Test Items";
+            // 
+            // ioTypeCombo
+            // 
+            this.ioTypeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ioTypeCombo.FormattingEnabled = true;
+            this.ioTypeCombo.Items.AddRange(new object[] {
+            "NavSpark",
+            "NavSpark Mini"});
+            this.ioTypeCombo.Location = new System.Drawing.Point(77, 186);
+            this.ioTypeCombo.Name = "ioTypeCombo";
+            this.ioTypeCombo.Size = new System.Drawing.Size(121, 20);
+            this.ioTypeCombo.TabIndex = 16;
+            this.ioTypeCombo.SelectedIndexChanged += new System.EventHandler(this.ioTypeChk_SelectedIndexChanged);
             // 
             // checkRtc
             // 
@@ -950,6 +965,17 @@
             this.label19.Text = "Threshold of COG";
             this.label19.Visible = false;
             // 
+            // useSensor
+            // 
+            this.useSensor.AutoSize = true;
+            this.useSensor.Location = new System.Drawing.Point(127, 307);
+            this.useSensor.Name = "useSensor";
+            this.useSensor.Size = new System.Drawing.Size(73, 16);
+            this.useSensor.TabIndex = 8;
+            this.useSensor.Text = "Use sensor";
+            this.useSensor.UseVisualStyleBackColor = true;
+            this.useSensor.CheckedChanged += new System.EventHandler(this.useSensor_CheckedChanged);
+            // 
             // thresholdCogWise
             // 
             this.thresholdCogWise.Enabled = false;
@@ -1022,19 +1048,6 @@
             this.loadFrom.Text = "Load From...";
             this.loadFrom.UseVisualStyleBackColor = true;
             this.loadFrom.Click += new System.EventHandler(this.loadFrom_Click);
-            // 
-            // ioTypeCombo
-            // 
-            this.ioTypeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ioTypeCombo.FormattingEnabled = true;
-            this.ioTypeCombo.Items.AddRange(new object[] {
-            "NavSpark",
-            "NavSpark Mini"});
-            this.ioTypeCombo.Location = new System.Drawing.Point(77, 186);
-            this.ioTypeCombo.Name = "ioTypeCombo";
-            this.ioTypeCombo.Size = new System.Drawing.Size(121, 20);
-            this.ioTypeCombo.TabIndex = 16;
-            this.ioTypeCombo.SelectedIndexChanged += new System.EventHandler(this.ioTypeChk_SelectedIndexChanged);
             // 
             // SettingForm
             // 
@@ -1162,5 +1175,6 @@
         private System.Windows.Forms.CheckBox testUart2TxRx;
         private System.Windows.Forms.CheckBox checkRtc;
         private System.Windows.Forms.ComboBox ioTypeCombo;
+        private System.Windows.Forms.CheckBox useSensor;
     }
 }

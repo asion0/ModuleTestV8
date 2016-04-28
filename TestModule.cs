@@ -65,9 +65,9 @@ namespace ModuleTestV8
                 {
                     return false;
                 }
+                GPS_RESPONSE rep;
+                rep = controllerIO.SetControllerMoto(0, 31, 30, 28, 20, 16, motorDelay, motorStep);
 
-                //6f 03 00 1f 1e 1c 14 10 00 00 1D B0 00 00 02 F0
-                GPS_RESPONSE rep = controllerIO.SetControllerMoto(0, 31, 30, 28, 20, 16, motorDelay, motorStep);
                 if (GPS_RESPONSE.ACK != rep)
                 {
                     return false;
@@ -548,7 +548,7 @@ namespace ModuleTestV8
         private bool TestNavSparkIo(WorkerParam p, WorkerReportParam r)
         {
             Thread.Sleep(1200);
-            GPS_RESPONSE rep = p.gps.ChangeBaudrate((byte)5, 2);
+            GPS_RESPONSE rep = p.gps.ChangeBaudrate((byte)5, 2, false);
             if (GPS_RESPONSE.ACK != rep)
             {
                 r.reportType = WorkerReportParam.ReportType.ShowError;
@@ -1367,7 +1367,7 @@ namespace ModuleTestV8
                             continue;
                         }
 
-                        UInt32 clkData = 0;
+                        Int32 clkData = 0;
                         rep = p.gps.QueryChannelClockOffset(gdClockOffset, prn, freq, ref clkData);
                         if (GPS_RESPONSE.ACK != rep)
                         {
@@ -1509,6 +1509,21 @@ namespace ModuleTestV8
                 return false;
             }
 
+            if (p.profile.useSensor)
+            {   //Find Home
+                //function 2: find home cw first, 3: ccw first.
+                rep = controllerIO.SetControllerSensor(3, 31, 30, 28, 20, 16, motorDelay, 950);
+                if (GPS_RESPONSE.ACK != rep)
+                {
+                    r.reportType = WorkerReportParam.ReportType.ShowError;
+                    p.error = WorkerParam.ErrorType.DrSensorFail;
+                    p.bw.ReportProgress(0, new WorkerReportParam(r));
+                    controllerInit = false;
+                    controllerIO.Close();
+                    return false;
+                }
+            }
+
             //Reset for Slot 1, 2, 3 in GPIO 10, 12, 13, 0011-0100-0000-0000 = 3400h
             rep = controllerIO.SetControllerIO(0x00003400, 0x00000000);
             if (GPS_RESPONSE.ACK != rep)
@@ -1569,7 +1584,10 @@ namespace ModuleTestV8
                     }
 
                     //6f 03 00 1f 1e 1c 14 10 00 00 1D B0 00 00 02 F0
-                    rep = controllerIO.SetControllerMoto(1, 31, 30, 28, 20, 16, motorDelay, motorStep);
+                    if (p.profile.useSensor)
+                        rep = controllerIO.SetControllerSensor(1, 31, 30, 28, 20, 16, motorDelay, motorStep);
+                    else
+                        rep = controllerIO.SetControllerMoto(1, 31, 30, 28, 20, 16, motorDelay, motorStep);
                     if (GPS_RESPONSE.ACK != rep)
                     {
                         r.reportType = WorkerReportParam.ReportType.ShowError;
@@ -1637,7 +1655,10 @@ namespace ModuleTestV8
                     }
 
                     //6f 03 00 1f 1e 1c 14 10 00 00 1D B0 00 00 02 F0
-                    rep = controllerIO.SetControllerMoto(0, 31, 30, 28, 20, 16, motorDelay, motorStep);
+                    if (p.profile.useSensor)
+                        rep = controllerIO.SetControllerSensor(0, 31, 30, 28, 20, 16, motorDelay, motorStep);
+                    else
+                        rep = controllerIO.SetControllerMoto(0, 31, 30, 28, 20, 16, motorDelay, motorStep);
                     if (GPS_RESPONSE.ACK != rep)
                     {
                         r.reportType = WorkerReportParam.ReportType.ShowError;
@@ -1697,7 +1718,7 @@ namespace ModuleTestV8
             {
                 return false;
             }
-#if  !(DEBUG)
+#if !(DEBUG)
             if (!DoColdStart(p, r, 3))
             {
                 return false;
@@ -2226,7 +2247,7 @@ namespace ModuleTestV8
                             continue;
                         }
 
-                        UInt32 clkData = 0;
+                        Int32 clkData = 0;
                         rep = p.gps.QueryChannelClockOffset(gdClockOffset, prn, freq, ref clkData);
                         if (GPS_RESPONSE.ACK != rep)
                         {
@@ -2314,7 +2335,7 @@ namespace ModuleTestV8
             if (p.profile.testIo)
             {
                 Thread.Sleep(1200);
-                rep = p.gps.ChangeBaudrate((byte)5, 2);
+                rep = p.gps.ChangeBaudrate((byte)5, 2, false);
                 if (GPS_RESPONSE.ACK != rep)
                 {
                     r.reportType = WorkerReportParam.ReportType.ShowError;
@@ -2704,7 +2725,7 @@ namespace ModuleTestV8
             else
 */
             {   //Need tag, using "$LOADER DOWNLOAD" command
-                rep = p.gps.ChangeBaudrate((byte)p.profile.dlBaudSel, 2);
+                rep = p.gps.ChangeBaudrate((byte)p.profile.dlBaudSel, 2, false);
                 if (GPS_RESPONSE.ACK != rep)
                 {
                     r.reportType = WorkerReportParam.ReportType.ShowError;
@@ -3004,7 +3025,7 @@ namespace ModuleTestV8
                 return false;
             }
 
-            rep = p.gps.ChangeBaudrate((byte)5, 2);
+            rep = p.gps.ChangeBaudrate((byte)5, 2, false);
             if (GPS_RESPONSE.ACK != rep)
             {
                 r.reportType = WorkerReportParam.ReportType.ShowError;
