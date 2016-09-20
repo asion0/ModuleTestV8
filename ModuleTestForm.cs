@@ -1005,7 +1005,8 @@ namespace ModuleTestV8
 
         private void UpdatePanelInfo()
         {
-            testCounter.Text = profile.GetTotalTestPeriod().ToString();
+            //testCounter.Text = profile.GetTotalTestPeriod().ToString();
+            testCounter.Text = profile.SetTestPeriodCounter(profile.GetTotalTestPeriod()).ToString();
             testCounter.ForeColor = Color.Black;
 
             moduleName.Text = profile.moduleName;
@@ -1147,7 +1148,8 @@ namespace ModuleTestV8
                 return;
             }
 
-            int count = Convert.ToInt32(testCounter.Text) - 1;
+            //int count = Convert.ToInt32(testCounter.Text) - 1;
+            int count = profile.DecreaseTestPeriodCounter();
             testCounter.Text = count.ToString();
             if (count > 0)
             {
@@ -1160,7 +1162,8 @@ namespace ModuleTestV8
 
         private void OpenPortTimerEventProcessor(Object myObject, EventArgs myEventArgs)
         {
-            int count = Convert.ToInt32(testCounter.Text) + 1;
+            //int count = Convert.ToInt32(testCounter.Text) + 1;
+            int count = profile.IncreaseTestPeriodCounter();
             testCounter.Text = count.ToString();
         }
 
@@ -1290,7 +1293,8 @@ namespace ModuleTestV8
                 Thread.Sleep(20);
             }
 
-            testCounter.Text = profile.GetTotalTestPeriod().ToString();
+            //testCounter.Text = profile.GetTotalTestPeriod().ToString();
+            testCounter.Text = profile.SetTestPeriodCounter(profile.GetTotalTestPeriod()).ToString();
             testCounter.ForeColor = Color.Red;
             testTimer.Interval = 1000;
             testTimer.Start();
@@ -1401,6 +1405,7 @@ namespace ModuleTestV8
             bkWorker[0].RunWorkerAsync(testParam[0]);
             EnableButton(false);
             TestRunning = TestStatus.GoldenLaunched;
+            //testCounter.Text = profile.SetTestPeriodCounter(profile.GetTotalTestPeriod()).ToString();
             testCounter.Text = profile.GetTotalTestPeriod().ToString();
             testCounter.ForeColor = Color.Green;
             TestModule.antennaEvent.Set();
@@ -1553,7 +1558,6 @@ namespace ModuleTestV8
                 else if (er == WorkerParam.ErrorType.NmeaDelayDetectError)
                 {   //Using CheckRtcError to display NMEA Delay Detect
                     int tt = resetTesterLogin.TestPeriod - Convert.ToInt32(testCounter.Text);
-
                     AddMessage(r.index, "Error : NMEADelayDetect in " + tt.ToString() + " seconds");
                     AddMessage(r.index, "Error Code : " + WorkerParam.GetErrorString(er));
                     SetResultDisplay((resultTable[r.index] as Label), ResultDisplayType.Fail);

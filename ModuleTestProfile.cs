@@ -614,6 +614,29 @@ namespace ModuleTestV8
             return defaultTestPeriod + snrTestPeriod;
         }
 
+        private int testPeriodCounter = 0;
+        public int SetTestPeriodCounter(int c)
+        {
+            testPeriodCounter = c;
+            return testPeriodCounter;
+        }
+
+        public int AddTestPeriodCounter(int a)
+        {
+            testPeriodCounter += a;
+            return testPeriodCounter;
+        }
+
+        public int DecreaseTestPeriodCounter()
+        {
+            return --testPeriodCounter;
+        }
+
+        public int IncreaseTestPeriodCounter()
+        {
+            return ++testPeriodCounter;
+        }
+
         public bool SaveToIniFile(String path)
         {
             if (File.Exists(path))

@@ -901,7 +901,7 @@ namespace ModuleTestV8
                 if (GpsMsgParser.CheckNmea(line))
                 {
                     r.reportType = WorkerReportParam.ReportType.ShowProgress;
-                    r.output = line;
+                    r.output = line.Substring(0, line.Length - 2);
                     p.bw.ReportProgress(0, new WorkerReportParam(r));
 
                     GpsMsgParser.ParsingResult ps = p.parser.ParsingNmea(line);
@@ -1496,7 +1496,7 @@ namespace ModuleTestV8
                 controllerInit = false;
                 return false;
             }
-            //DR test use GPIO 1,2,3,4 ,5,6,10,12,13,16,20,28,30,31, 1101-0000-0001-0001-0011-0100-0111-1110 = D01137Eh
+            //DR test use GPIO 1,2,3,4,5,6,10,12,13,16,20,28,30,31, 1101-0000-0001-0001-0011-0100-0111-1110 = D011347Eh
             //GPIO 28, 30, 31 for input, 1101-0000-0000-0000-0000-0000-0000-0000 = D000000h
             rep = controllerIO.InitControllerIO(0xd011347e, 0xd0000000);
             if (GPS_RESPONSE.ACK != rep)
@@ -1699,9 +1699,24 @@ namespace ModuleTestV8
             r.index = p.index;
             GPS_RESPONSE rep = GPS_RESPONSE.NONE;
 
+            Stopwatch sw = new Stopwatch();
+            sw.Reset();
+            sw.Start();
+            double initTime = 0;
+
             if (!DoDrInitIo(p, r))
             {
                 return false;
+            }
+            initTime = sw.ElapsedMilliseconds / 1000.0;
+            sw.Stop();
+            r.reportType = WorkerReportParam.ReportType.ShowProgress;
+            r.output = "homing time consuming:" + initTime.ToString("F1");
+            p.bw.ReportProgress(0, new WorkerReportParam(r));
+
+            if(initTime >= 1.0)
+            {
+                p.profile.AddTestPeriodCounter((int)initTime);
             }
             CheckControllerEvent(p, 30);
             if (!controllerInit)
@@ -1747,18 +1762,18 @@ namespace ModuleTestV8
             //int DrSleep2 = 500;
             
             //==================== DR Test Step 0
+            //Test Here
+            UInt32 temp = 0, odo_plus = 0;
+            float gyro = 0, staticGyro = 0;
+            byte odo_bw = 0;
+            double gyroCcw = 0, gyroCw = 0, gyro_avg;
+            const int testTimes = 8;
+
             if (!SetDrMcuStep(p, r, 0))
             {
                 return false;
             }
             Thread.Sleep(1500);
-
-            //Test Here
-            UInt32 temp = 0, odo_plus = 0;
-            float gyro = 0;
-            byte odo_bw = 0;
-            double gyroCcw = 0, gyroCw = 0, gyro_avg;
-            int testTimes = 10;
 
             for (int i = 0; i < testTimes; ++i)
             {
@@ -1771,24 +1786,10 @@ namespace ModuleTestV8
                     return false;
                 }
                 r.reportType = WorkerReportParam.ReportType.ShowProgress;
-                r.output = "gyro:" + gyro.ToString() + " odo_plus:" + odo_plus.ToString() + " odo_bw:" + odo_bw.ToString();
+                r.output = "gyro:" + gyro.ToString("F2") + " odo_plus:" + odo_plus.ToString() + " odo_bw:" + odo_bw.ToString();
                 gyroCcw += gyro;
                 p.bw.ReportProgress(0, new WorkerReportParam(r));
                 Thread.Sleep(100);
-            }
-
-            gyro_avg = -1 * gyroCcw / testTimes;
-            r.reportType = WorkerReportParam.ReportType.ShowProgress;
-            r.output = "gyro ccw avg:" + (gyroCcw / testTimes).ToString();
-            p.bw.ReportProgress(0, new WorkerReportParam(r));
-            Thread.Sleep(1000);
-
-            if (gyro_avg > p.profile.uslAnticlockWise || gyro_avg < p.profile.lslAnticlockWise)
-            {
-                r.reportType = WorkerReportParam.ReportType.ShowError;
-                p.error = WorkerParam.ErrorType.GyroFail;
-                p.bw.ReportProgress(0, new WorkerReportParam(r));
-                return false;
             }
 
             CheckControllerEvent(p, 90);
@@ -1803,7 +1804,7 @@ namespace ModuleTestV8
             Thread.Sleep(2000);
 
             //Test Here
-            rep = p.gps.QueryDrStatus(1000, ref temp, ref gyro, ref odo_plus, ref odo_bw);
+            rep = p.gps.QueryDrStatus(1000, ref temp, ref staticGyro, ref odo_plus, ref odo_bw);
             if (GPS_RESPONSE.ACK != rep)
             {
                 r.reportType = WorkerReportParam.ReportType.ShowError;
@@ -1813,8 +1814,22 @@ namespace ModuleTestV8
             }
 
             r.reportType = WorkerReportParam.ReportType.ShowProgress;
-            r.output = "gyro:" + gyro.ToString() + " odo_plus:" + odo_plus.ToString() + " odo_bw:" + odo_bw.ToString();
+            r.output = "static gyro:" + staticGyro.ToString("F2") + " odo_plus:" + odo_plus.ToString() + " odo_bw:" + odo_bw.ToString();
             p.bw.ReportProgress(0, new WorkerReportParam(r));
+
+            gyro_avg = staticGyro - gyroCcw / testTimes;
+            r.reportType = WorkerReportParam.ReportType.ShowProgress;
+            r.output = "gyro ccw avg calibration:" + gyro_avg.ToString("F3");
+            p.bw.ReportProgress(0, new WorkerReportParam(r));
+            Thread.Sleep(1000);
+
+            if (gyro_avg > p.profile.uslAnticlockWise || gyro_avg < p.profile.lslAnticlockWise)
+            {
+                r.reportType = WorkerReportParam.ReportType.ShowError;
+                p.error = WorkerParam.ErrorType.GyroFail;
+                p.bw.ReportProgress(0, new WorkerReportParam(r));
+                return false;
+            }
 
             if (odo_plus > 600 || odo_plus < 400)
             {
@@ -1831,8 +1846,6 @@ namespace ModuleTestV8
                 p.bw.ReportProgress(0, new WorkerReportParam(r));
                 return false;
             }
-
-            //Thread.Sleep(1000);
             Thread.Sleep(200);
 
             CheckControllerEvent(p, 90);
@@ -1845,7 +1858,7 @@ namespace ModuleTestV8
                 return false;
             }
             Thread.Sleep(2000);
-            for (int i = 0; i < 10; ++i)
+            for (int i = 0; i < testTimes; ++i)
             {
                 rep = p.gps.QueryDrStatus(1000, ref temp, ref gyro, ref odo_plus, ref odo_bw);
                 if (GPS_RESPONSE.ACK != rep)
@@ -1856,14 +1869,14 @@ namespace ModuleTestV8
                     return false;
                 }
                 r.reportType = WorkerReportParam.ReportType.ShowProgress;
-                r.output = "gyro:" + gyro.ToString() + " odo_plus:" + odo_plus.ToString() + " odo_bw:" + odo_bw.ToString();
+                r.output = "gyro:" + gyro.ToString("F2") + " odo_plus:" + odo_plus.ToString() + " odo_bw:" + odo_bw.ToString();
                 gyroCw += gyro;
                 p.bw.ReportProgress(0, new WorkerReportParam(r));
                 Thread.Sleep(100);
             }
-            gyro_avg = gyroCw / testTimes;
+            gyro_avg = gyroCw / testTimes - staticGyro;
             r.reportType = WorkerReportParam.ReportType.ShowProgress;
-            r.output = "gyro cw avg:" + (gyroCw / testTimes).ToString();
+            r.output = "gyro cw avg calibration:" + gyro_avg.ToString("F3");
             p.bw.ReportProgress(0, new WorkerReportParam(r));
 
             if (gyro_avg > p.profile.uslClockWise || gyro_avg < p.profile.lslClockWise)
@@ -2091,10 +2104,8 @@ namespace ModuleTestV8
                     p.bw.ReportProgress(0, new WorkerReportParam(r));
                 }
 
-
                 antennaEvent.WaitOne();
                 SkytraqGps annIO = new SkytraqGps();
-
                 for (int i = 0; i < 2; ++i)
                 {
                     rep = annIO.Open(p.annIoPort, 5);
@@ -2208,7 +2219,6 @@ namespace ModuleTestV8
                     return false;
                 }
                 EndAntennaProcess(annIO);
-
             }
 
             if ((p.profile.testGpSnr || p.profile.testGlSnr || p.profile.testBdSnr) && !TestSnr(p, r))
@@ -2308,10 +2318,6 @@ namespace ModuleTestV8
                     return false;
                 }
             }
-
-            //CheckControllerEvent(p, 100);
-            //Thread.Sleep(1000);
-            //ResetWaitingCount();
 
             if (!p.bw.CancellationPending)
             {
@@ -2494,10 +2500,6 @@ namespace ModuleTestV8
         private byte CalcCheckSum16(byte[] data, int start, int len)
         {
             UInt16 checkSum = 0;
-            //const U08* ptr = dataPtr;
-            //int loopCount = len / sizeof(UInt16);
-            //int i;
-
             for (int i = 0; i < len; i += sizeof(UInt16))
             {
                 UInt16 word = Convert.ToUInt16(data[start + i + 1] | data[start + i] << 8);

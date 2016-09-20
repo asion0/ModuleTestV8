@@ -1,5 +1,5 @@
 [Golden]
-Golden_Baud_Rate=3
+Golden_Baud_Rate=1
 [Module]
 Module_Type=0
 GPS_Module_Select=29
@@ -44,10 +44,10 @@ Test_miniHommer=False
 Test_DR_Cyro=True
 Use_Sensor=True
 Test_DR_Duration=10
-USL_Clockwise=6000
-USL_Anticlockwise=6000
-LSL_Clockwise=2500
-LSL_Anticlockwise=2500
+USL_Clockwise=5000
+USL_Anticlockwise=5000
+LSL_Clockwise=3500
+LSL_Anticlockwise=3500
 Threshold_Of_Cog=0
 [Verification]
-Key=CCFBDB71A3C21BFDE4B974D19D5652668FC75DB77EA88AB49A114715F993549
+Key=22F5BA5D4DCC7AD1E045F661F7DB040A86F214F799E4E987A7AF755DB1975465
