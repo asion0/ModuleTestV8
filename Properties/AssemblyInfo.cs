@@ -32,9 +32,10 @@ using System.Runtime.InteropServices;
 // 您可以指定所有的值，也可以依照以下的方式，使用 '*' 將組建和修訂編號
 // 指定為預設值:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.53")]
-[assembly: AssemblyFileVersion("1.0.0.53")]
+[assembly: AssemblyVersion("1.0.0.54")]
+[assembly: AssemblyFileVersion("1.0.0.54")]
 
+// 1.0.0.54 - 20160921 Add scanDelay in Module.ini for scan baud.
 // 1.0.0.53 - 20160902 Modify DR Gryo test, calibration by static gyro and add homing consuming.
 // 1.0.0.52 - 20160427 Modify for DR Test, using sensor.
 // 1.0.0.51 - 20160119 Fixed [Test RTC] setting can't be save issue.

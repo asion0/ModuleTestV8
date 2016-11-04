@@ -2524,7 +2524,10 @@ namespace ModuleTestV8
                     p.bw.ReportProgress(0, new WorkerReportParam(r));
                     return -1;
                 }
-
+                if (ModuleIniParser.scanDelay > 0)
+                {
+                    Thread.Sleep(ModuleIniParser.scanDelay);
+                }
                 //TestDeviceTimeout = (first < 2) ? 1500 : 1000;
                 TestDeviceTimeout = (first < 2) ? 500 : 500;
                 rep = p.gps.TestDevice(TestDeviceTimeout, 1);

@@ -12,14 +12,16 @@ namespace ModuleTestV8
             NoError,
             NoGpsModule,
         }
+        public static int scanDelay = 500;
         public static ErrorCode Load(String path, ref List<String> rGps, ref List<String> rGlonass, 
             ref List<String> rBeidou, ref List<String> rGalileo)
         {
-            // String iniFile = Login.loginInfo.currentPath + "\\Module.ini";
+            StringBuilder temp = new StringBuilder(255);
+            int n = GetPrivateProfileString("Module", "ScanDelay", "500", temp, 255, path);
+            scanDelay = Convert.ToInt32(temp.ToString());
 
             if (!LoadModule(path, "gpCount", "GPS", ref rGps))
             {
-                //FatalEror(path.NoGpsModule);
                 return ErrorCode.NoGpsModule;
             }
             LoadModule(path, "glCount", "GLONASS", ref rGlonass);
